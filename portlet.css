@@ -1,0 +1,10 @@
+
+.plugin-gridster.sonos .front {
+  background: #FFFFFF url('images/Sonos-Logo.jpg') center 25px;
+  background-size:   300px 100px;
+  background-repeat: no-repeat;
+}
+
+.plugin-gridster.sonos .back {
+  background: #FFFFFF;
+}

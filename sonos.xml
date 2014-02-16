@@ -1,0 +1,23 @@
+<grammar version="1.0" xml:lang="fr-FR" mode="voice" root="ruleSonos" xmlns="http://www.w3.org/2001/06/grammar" tag-format="semantics/1.0">
+  <rule id="ruleSonos" scope="public">
+    <example>Sarah allume la musique dans le salon</example>
+    <tag>out.action=new Object(); </tag>
+    <item>Sarah</item>
+     
+    <one-of>
+		<item>allume la musique<tag>out.action.actionSonos="play"</tag></item>
+		<item>eteint la musique<tag>out.action.actionSonos="pause"</tag></item>
+		<item>passe a la musique suivante<tag>out.action.actionSonos="next"</tag></item>
+		<item>passe a la musique precedente<tag>out.action.actionSonos="previous"</tag></item>
+		<item>monte le volume<tag>out.action.actionSonos="volup"</tag></item>
+		<item>baisse le bolume<tag>out.action.actionSonos="voldown"</tag></item>
+    </one-of> 
+    <one-of>
+		<item>dans le bureau<tag>out.action.idPiece='bureau'</tag></item>
+		<item>dans la cuisine<tag>out.action.idPiece='cuisine'</tag></item>
+    </one-of>
+    
+    <tag>out.action._attributes.uri="http://127.0.0.1:8080/sarah/sonos";</tag>
+  </rule>
+</grammar>
+              
