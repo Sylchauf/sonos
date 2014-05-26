@@ -3,20 +3,32 @@
     <example>Sarah allume la musique dans le salon</example>
     <tag>out.action=new Object(); </tag>
     <item>Sarah</item>
+	
+	
      
     <one-of>
-		<item>allume la musique<tag>out.action.actionSonos="play"</tag></item>
-		<item>eteint la musique<tag>out.action.actionSonos="pause"</tag></item>
-		<item>passe a la musique suivante<tag>out.action.actionSonos="next"</tag></item>
-		<item>passe a la musique precedente<tag>out.action.actionSonos="previous"</tag></item>
-		<item>monte le volume<tag>out.action.actionSonos="volup"</tag></item>
-		<item>baisse le bolume<tag>out.action.actionSonos="voldown"</tag></item>
-    </one-of> 
-    <one-of>
-		<item>dans le bureau<tag>out.action.idPiece='bureau'</tag></item>
-		<item>dans la cuisine<tag>out.action.idPiece='cuisine'</tag></item>
+		<item>allume<tag>out.action.actionSonos="play"</tag></item>
+		<item>éteint<tag>out.action.actionSonos="pause"</tag></item>
+		<item>passe à suivante<tag>out.action.actionSonos="next"</tag></item>
+		<item>passe à precedente<tag>out.action.actionSonos="previous"</tag></item>
+		<item>monte<tag>out.action.actionSonos="volup"</tag></item>
+		<item>baisse<tag>out.action.actionSonos="voldown"</tag></item>
+		<item>synchronise<tag>out.action.actionSonos="synchronise"</tag></item>
     </one-of>
-    
+
+	<one-of>
+		<item>la musique</item>
+		<item>le volume</item>
+    </one-of>
+	
+	<item repeat="0-1">
+		<one-of>
+			<item>depuis le salon<tag>out.action.syncFrom='SALON'</tag></item>
+			<item>vers le salon<tag>out.action.syncTo='SALON'</tag></item>
+			<item>depuis le bureau<tag>out.action.syncFrom='BUREAU1'</tag></item>
+			<item>vers le bureau<tag>out.action.syncTo='BUREAU1'</tag></item>
+		</one-of>
+	</item>
     <tag>out.action._attributes.uri="http://127.0.0.1:8080/sarah/sonos";</tag>
   </rule>
 </grammar>
