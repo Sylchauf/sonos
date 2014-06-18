@@ -1,34 +1,92 @@
+
 <grammar version="1.0" xml:lang="fr-FR" mode="voice" root="ruleSonos" xmlns="http://www.w3.org/2001/06/grammar" tag-format="semantics/1.0">
   <rule id="ruleSonos" scope="public">
     <example>Sarah allume la musique dans le salon</example>
     <tag>out.action=new Object(); </tag>
     <item>Sarah</item>
-	
-	
      
     <one-of>
-		<item>allume<tag>out.action.actionSonos="play"</tag></item>
-		<item>éteint<tag>out.action.actionSonos="pause"</tag></item>
-		<item>passe à suivante<tag>out.action.actionSonos="next"</tag></item>
-		<item>passe à precedente<tag>out.action.actionSonos="previous"</tag></item>
-		<item>monte<tag>out.action.actionSonos="volup"</tag></item>
-		<item>baisse<tag>out.action.actionSonos="voldown"</tag></item>
-		<item>synchronise<tag>out.action.actionSonos="synchronise"</tag></item>
-    </one-of>
-
-	<one-of>
-		<item>la musique</item>
-		<item>le volume</item>
-    </one-of>
 	
-	<item repeat="0-1">
-		<one-of>
-			<item>depuis le salon<tag>out.action.syncFrom='SALON'</tag></item>
-			<item>vers le salon<tag>out.action.syncTo='SALON'</tag></item>
-			<item>depuis le bureau<tag>out.action.syncFrom='BUREAU1'</tag></item>
-			<item>vers le bureau<tag>out.action.syncTo='BUREAU1'</tag></item>
-		</one-of>
-	</item>
+		<!-- Lance la musique/radio -->
+		<item weight="1.5">
+			<one-of>
+				<item>allume</item>
+				<item>lance</item>
+			</one-of>
+			<one-of>
+				<item>la musique<tag>out.action.actionSonos="play"</tag></item>
+				<item>la radio<tag>out.action.actionSonos="playradio"</tag></item>
+			</one-of>
+		</item>
+		
+		<!-- Arrète la musique/radio -->
+		<item weight="1.5">arrète la<tag>out.action.actionSonos="pause"</tag>
+			<one-of>
+				<item>musique</item>
+				<item>radio</item>
+			</one-of>
+		</item>
+		
+		<!-- Changement de musique -->
+		<item weight="1.5">passe à la musique
+			<one-of>
+				<item>suivante<tag>out.action.actionSonos="next"</tag></item>
+				<item>precedente<tag>out.action.actionSonos="previous"</tag></item>
+			</one-of>
+		</item>
+		
+		<!-- Augmentation du volume par palier -->
+		<item weight="1.5">monte<tag>out.action.actionSonos="volup"</tag>
+			<one-of>
+				<item>le volume</item>
+				<item>le son</item>
+			</one-of>
+		</item>
+		
+		<!-- Baisse du volume par palier -->
+		<item weight="1.5">baisse<tag>out.action.actionSonos="voldown"</tag>
+			<one-of>
+				<item>le volume</item>
+				<item>le son</item>
+			</one-of>
+		</item>
+		
+		<!-- Réglage précis du volume -->
+		<!--
+		<item weight="1.5">règle le volume à
+			<one-of>
+				<item>dix<tag>out.action.actionSonos="volswitch";out.action.value="10"</tag></item>
+				<item>vingt<tag>out.action.actionSonos="volswitch";out.action.value="20"</tag></item>
+				<item>trente<tag>out.action.actionSonos="volswitch";out.action.value="30"</tag></item>
+				<item>quarante<tag>out.action.actionSonos="volswitch";out.action.value="40"</tag></item>
+				<item>cinquante<tag>out.action.actionSonos="volswitch";out.action.value="50"</tag></item>
+				<item>soixante<tag>out.action.actionSonos="volswitch";out.action.value="60"</tag></item>
+				<item>soixantedix<tag>out.action.actionSonos="volswitch";out.action.value="70"</tag></item>
+				<item>quatrevingt<tag>out.action.actionSonos="volswitch";out.action.value="80"</tag></item>
+				<item>quatrevingt dix<tag>out.action.actionSonos="volswitch";out.action.value="90"</tag></item>
+				<item>cent<tag>out.action.actionSonos="volswitch";out.action.value="100"</tag></item>
+			</one-of>
+			<item>pour cent</item>
+		</item>-->
+		
+		<!-- Synchro de la musique pour les pocesseurs de plusieurs Sonos -->
+		<item>synchronise la musique<tag>out.action.actionSonos="synchronise"</tag>
+			<one-of>
+					<item>depuis le salon<tag>out.action.syncTo='SALON'</tag></item>
+					<item>vers le salon<tag>out.action.syncFrom='SALON'</tag></item>
+					<item>depuis le bureau<tag>out.action.syncTo='BUREAU1'</tag></item>
+					<item>vers le bureau<tag>out.action.syncFrom='BUREAU1'</tag></item>
+			</one-of>
+		</item>
+    </one-of>
+    
+    <!-- Permet de commander des SONOS qui n'ont pas de client SARAH ou qui se trouve dans une pièce différente -->
+	<!--
+	<one-of repeat="0-1">
+		<item>dans le salon<tag>out.action.idPiece='salon'</tag></item>
+    </one-of>
+    -->
+    
     <tag>out.action._attributes.uri="http://127.0.0.1:8080/sarah/sonos";</tag>
   </rule>
 </grammar>
