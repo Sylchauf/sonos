@@ -9,17 +9,23 @@
 	request = require('request');
 	SonosAPI = require('./sonosapi.js');
 	
-
 	// Detection de la pièce / client Sarah
 	if (data.idPiece == '' || data.idPiece == undefined) {
 		data.idPiece = data.client;
 	}
+		
+	// Detection de l'enceinte sur laquelle vocaliser
+	for (var idSonos in configSonosPerso.equipements[data.idPiece])
+	{
+		if (eval('configSonosPerso.equipements.'+data.idPiece+'.'+idSonos+'.vocalisation') == 1)
+			data.idSonos = idSonos;
+		//console.log(idSonos+" => "+eval('configSonosPerso.equipements.'+data.idPiece+'.'+idSonos+'.vocalisation'));
+	}
 	
 	if (data.actionSonos != 'saveConfig') {
-		lieu = eval('configSonosPerso.equipements.'+data.idPiece+'.ip');
-		mac = eval('configSonosPerso.equipements.'+data.idPiece+'.mac');
+		lieu = eval('configSonosPerso.equipements.'+data.idPiece+'.'+data.idSonos+'.ip');
+		mac = eval('configSonosPerso.equipements.'+data.idPiece+'.'+data.idSonos+'.mac');
 	}
-
 
 	// Actions
 	if (data.actionSonos == "play" || data.actionSonos == "playradio")	{		
@@ -109,7 +115,7 @@
 	
 	else if (data.actionSonos == "saveConfig") {
 		json = JSON.stringify(data.body);
-		
+		console.log(json);
 		saveFile('sonos', 'configSonosPerso.prop', json);
 		
 		callback();
