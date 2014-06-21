@@ -9,6 +9,7 @@
 	request = require('request');
 	SonosAPI = require('./sonosapi.js');
 	
+	//console.log("****"+data.client+"****");
 	// Detection de la pièce / client Sarah
 	if (data.idPiece == '' || data.idPiece == undefined) {
 		data.idPiece = data.client;
@@ -17,10 +18,11 @@
 	// Detection de l'enceinte sur laquelle vocaliser
 	if (data.actionSonos != 'saveConfig') {
 		for (var idSonos in configSonosPerso.equipements[data.idPiece]) {
-			if (eval('configSonosPerso.equipements.'+data.idPiece+'.'+idSonos+'.vocalisation') == 1)
+			//console.log(idSonos+" => "+configSonosPerso.equipements[data.idPiece][idSonos].vocalisation);
+			if (configSonosPerso.equipements[data.idPiece][idSonos].vocalisation == 1)
 				data.idSonos = idSonos;
-			//console.log(idSonos+" => "+eval('configSonosPerso.equipements.'+data.idPiece+'.'+idSonos+'.vocalisation'));
 		}
+		
 		//Si le client actuel n'a pas d'enceinte on parle sur la 1ère enceinte dispo
 		if (data.idSonos == undefined) {
 			for (var piece in configSonosPerso.equipements) {
@@ -35,9 +37,10 @@
 					break;
 			}
 		}
-		console.log("Piece => "+data.idPiece + " et Enceinte => " + data.idSonos);
-		lieu = eval('configSonosPerso.equipements.'+data.idPiece+'.'+data.idSonos+'.ip');
-		mac = eval('configSonosPerso.equipements.'+data.idPiece+'.'+data.idSonos+'.mac');
+		//console.log("Piece => "+data.idPiece + " et Enceinte => " + data.idSonos);
+		lieu = configSonosPerso.equipements[data.idPiece][data.idSonos].ip;
+		mac = configSonosPerso.equipements[data.idPiece][data.idSonos].mac;
+		//console.log("Lieu => "+lieu+" et mac => "+mac);
 	}
 
 	// Actions
@@ -156,7 +159,7 @@
 			winston.log('error', 'Error while saving properties:', ex.message);
 		}
 	}
-	
+	data.idPiece = "";
 };
 
 
