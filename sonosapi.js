@@ -607,14 +607,12 @@ function Search() {
 	   
 	  this.socket = dgram.createSocket('udp4', function(buffer, rinfo) {
 	    buffer = buffer.toString();
-	    console.log('test:::');
 	    if(buffer.match(/.+Sonos.+/)) {
 	    	device = {};
 	    	
 	    	monregex = new RegExp('(http://.*?device_description\.xml)');
 	    	url_device = buffer.match(monregex);
 	    	url_device = url_device[1];
-	    	console.log('test2:::');
 	    	monregex = new RegExp('http://(.*?):1400');
 	    	device.ip = buffer.match(monregex);
 	    	device.ip = device.ip[1];
@@ -636,7 +634,6 @@ function Search() {
 		    					insert = false;
 		    				}
 		    			});
-		    			console.log('insert:::'+insert);
 		    			if (insert) {
 		    				devices.push(device);
 		    				
