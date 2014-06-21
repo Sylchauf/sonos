@@ -1,1 +1,1 @@
-{"equipements":{"BUREAU1":{"mac":"000E58C9981C","ip":"192.168.1.86"},"SALON":{"mac":"000E58C26A88","ip":"192.168.1.56"}},"volumeAnnonce":"35","volumePalier":"9","defaultRadio":"x-sonosapi-radio:Ivvo_gGiNo8?sid=151","exportAllVoice":"1"}
+{"equipements":{"BUREAU1":{"ip":{"mac":"000E58C9981C","ip":"192.168.1.86","vocalisation":"1"},"rzqr":{"mac":"000E58C26A88","ip":"192.168.1.56","vocalisation":"0"}}},"volumeAnnonce":"35","volumePalier":"9","defaultRadio":"x-sonosapi-radio:Ivvo_gGiNo8?sid=151","exportAllVoice":"1"}
