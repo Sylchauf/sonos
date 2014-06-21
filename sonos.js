@@ -157,7 +157,7 @@
 		}
 	}
 	
-}
+};
 
 
 exports.init = function(SARAH){
@@ -177,8 +177,8 @@ exports.init = function(SARAH){
 			}
 			tts = '';
 			return;
-		}
+		};
 	 }
 	
 	SonosAPI.Search();
- }
+ };
