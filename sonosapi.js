@@ -4,7 +4,6 @@ var devices = new Array();
  * Permet de lancer une radio
  */
 function RunRadio(radio, callbackfn) {
-	console.log('run radio'+radio+'-------'+htmlEnc(radio));
 	var url = '/MediaRenderer/AVTransport/Control';
 	var action = 'SetAVTransportURI';
 	var service = 'urn:schemas-upnp-org:service:AVTransport:1';
@@ -395,7 +394,12 @@ function callBackToSonos(message, lieu) {
 																});	
 															}
 															else {
-																console.log(media.CurrentURI);
+																// Fix pour les stream mp3 radio
+																monregex = new RegExp('x-sonosapi-stream:(.*?)');
+																if (media.CurrentURI.match(monregex)) {
+																	media.CurrentURI = position.trackuri;
+																}
+																
 																RunRadio(media.CurrentURI, function() {
 																	if (statusbefore != 'STOPPED' && statusbefore != 'PAUSED_PLAYBACK') {
 																		Play(function() {
