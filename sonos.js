@@ -35,7 +35,7 @@
 					break;
 			}
 		}
-
+		console.log("Piece => "+data.idPiece + " et Enceinte => " + data.idSonos);
 		lieu = eval('configSonosPerso.equipements.'+data.idPiece+'.'+data.idSonos+'.ip');
 		mac = eval('configSonosPerso.equipements.'+data.idPiece+'.'+data.idSonos+'.mac');
 	}
