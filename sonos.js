@@ -13,16 +13,29 @@
 	if (data.idPiece == '' || data.idPiece == undefined) {
 		data.idPiece = data.client;
 	}
-		
-	// Detection de l'enceinte sur laquelle vocaliser
-	for (var idSonos in configSonosPerso.equipements[data.idPiece])
-	{
-		if (eval('configSonosPerso.equipements.'+data.idPiece+'.'+idSonos+'.vocalisation') == 1)
-			data.idSonos = idSonos;
-		//console.log(idSonos+" => "+eval('configSonosPerso.equipements.'+data.idPiece+'.'+idSonos+'.vocalisation'));
-	}
 	
+	// Detection de l'enceinte sur laquelle vocaliser
 	if (data.actionSonos != 'saveConfig') {
+		for (var idSonos in configSonosPerso.equipements[data.idPiece]) {
+			if (eval('configSonosPerso.equipements.'+data.idPiece+'.'+idSonos+'.vocalisation') == 1)
+				data.idSonos = idSonos;
+			//console.log(idSonos+" => "+eval('configSonosPerso.equipements.'+data.idPiece+'.'+idSonos+'.vocalisation'));
+		}
+		//Si le client actuel n'a pas d'enceinte on parle sur la 1ère enceinte dispo
+		if (data.idSonos == undefined) {
+			for (var piece in configSonosPerso.equipements) {
+				for (var sonos in configSonosPerso.equipements[piece]) {
+					if (eval('configSonosPerso.equipements.'+piece+'.'+sonos+'.vocalisation') == 1) {
+						data.idPiece = piece;
+						data.idSonos = sonos;
+						break;
+					}
+				}
+				if (data.idSonos != undefined)
+					break;
+			}
+		}
+
 		lieu = eval('configSonosPerso.equipements.'+data.idPiece+'.'+data.idSonos+'.ip');
 		mac = eval('configSonosPerso.equipements.'+data.idPiece+'.'+data.idSonos+'.mac');
 	}
@@ -32,10 +45,10 @@
 		SonosAPI.GetInfosPosition(function(infos) {
 			if(data.actionSonos == "playradio") {
 				SonosAPI.RunRadio(configSonosPerso.defaultRadio, function() {
-				   SonosAPI.Play(callback());//{'tts': 'Je lance la radio.'}
+				   SonosAPI.Play(callback(configSonosPerso.confirmActions == 1 ? {'tts': 'Je lance la radio.'} : {}));
 				});
 		    }
-			if (infos.tracknumber == "0") {
+			else if (infos.tracknumber == "0") {
 				SARAH.askme("Il n'y a pas de musique dans la playlist. Voulez vous que je lance une radio ?", {
 				  "Oui" : 'oui',
 				  "Non" : 'non'
@@ -53,30 +66,30 @@
 				callback();
 			}
 			else {
-				SonosAPI.Play(callback());
+				SonosAPI.Play(callback(configSonosPerso.confirmActions == 1 ? {'tts': 'Je lance la musique.'} : {}));
 			}
 		});	
 	}
 	  
 	else if (data.actionSonos == "pause") {
-		SonosAPI.Pause(callback());
+		SonosAPI.Pause(callback(configSonosPerso.confirmActions == 1 ? {'tts': 'J\'arrête la musique.'} : {}));
 	}
 
 
 	else if (data.actionSonos == "next") {
-		SonosAPI.Next(callback());
+		SonosAPI.Next(callback(configSonosPerso.confirmActions == 1 ? {'tts': 'Je lance la musique suivante.'} : {}));
 	}
 
 	else if (data.actionSonos == "previous") {
-		SonosAPI.Prev(callback());
+		SonosAPI.Prev(callback(configSonosPerso.confirmActions == 1 ? {'tts': 'Je lance la musique précedente.'} : {}));
 	}
 	
 	else if (data.actionSonos == "volup") {
-		SonosAPI.volUp(callback());
+		SonosAPI.volUp(callback(configSonosPerso.confirmActions == 1 ? {'tts': 'Je monte le son.'} : {}));
 	}
 	
 	else if (data.actionSonos == "voldown")	{
-		SonosAPI.volDown(callback());
+		SonosAPI.volDown(callback(configSonosPerso.confirmActions == 1 ? {'tts': 'Je baisse le son.'} : {}));
 	}
 	
 	else if (data.actionSonos == "volswitch") {
@@ -84,7 +97,7 @@
 		    callback({'tts': "Le volume est indéfini !"});
 		}
 		else {
-			SonosAPI.setVolume(data.value, callback());//{'tts': "Je réduis le volume."}
+			SonosAPI.setVolume(data.value, callback(configSonosPerso.confirmActions == 1 ? {'tts': 'J\'ai réglé le volume à '+data.value+' %.'} : {}));
 		}
     }
 	
@@ -95,7 +108,7 @@
 			// Oui, donc on synchronique de la pièce en cours (client) vers la piece demandée (to)
 			SonosAPI.Synchronise(data.idPiece, data.syncTo, function () {
 				SonosAPI.Play(function(){
-					callback();
+					callback(configSonosPerso.confirmActions == 1 ? {'tts': 'J\ai éffectué la synchronisation.'} : {});
 				});	
 			});
 		}
@@ -103,7 +116,7 @@
 			// Non, donc je synchronise la piece demandée (from) vers la piece en cours (client)
 			SonosAPI.Synchronise(data.syncFrom, data.idPiece, function () {
 				SonosAPI.Play(function(){
-					callback();
+					callback(configSonosPerso.confirmActions == 1 ? {'tts': 'J\ai éffectué la synchronisation.'} : {});
 				});			
 			});
 		}
@@ -115,7 +128,7 @@
 	
 	else if (data.actionSonos == "saveConfig") {
 		json = JSON.stringify(data.body);
-		console.log(json);
+
 		saveFile('sonos', 'configSonosPerso.prop', json);
 		
 		callback();
