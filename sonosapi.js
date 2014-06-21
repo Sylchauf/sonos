@@ -4,6 +4,7 @@ var devices = new Array();
  * Permet de lancer une radio
  */
 function RunRadio(radio, callbackfn) {
+	console.log('run radio'+radio+'-------'+htmlEnc(radio));
 	var url = '/MediaRenderer/AVTransport/Control';
 	var action = 'SetAVTransportURI';
 	var service = 'urn:schemas-upnp-org:service:AVTransport:1';
@@ -372,46 +373,45 @@ function callBackToSonos(message, lieu) {
 										RunRadio('http://'+configSarah.http.ip+':'+configSarah.http.port+'/assets/sonos/tempvoice.wav', function(tracknumbertemp) {
 											monregex = new RegExp('x-file-cifs://(.*?)');
 											var results = position.trackuri.match(monregex);
-											if (results != null || 1) {
 												// C'est un mp3 ou equivalent						
-													Play(function() {
-														waitTheEndPlay(function() {
-															setVolume(volumeinit, function () {
-																if (results != null) {
-																	Seek('TRACK_NR', position.tracknumber, function() {
-																		Seek('REL_TIME', position.reltime, function() {
-																			if (statusbefore != 'STOPPED' && statusbefore != 'PAUSED_PLAYBACK') {
-																				Play(function() {
-																						console.log('liberation');
-																						return;
-																				});
-																			}
-																			else {
-																					console.log('liberation');
-																					return;
-		
-																			}
-																		});	
-																	});	
-																}
-																else {
-																	RunRadio(media.CurrentURI, function() {
+												Play(function() {
+													waitTheEndPlay(function() {
+														setVolume(volumeinit, function () {
+															if (results != null) {
+																Seek('TRACK_NR', position.tracknumber, function() {
+																	Seek('REL_TIME', position.reltime, function() {
 																		if (statusbefore != 'STOPPED' && statusbefore != 'PAUSED_PLAYBACK') {
 																			Play(function() {
-																					console.log('CallBack To Sonos ended');
-																					return;
-																				});
-																		}
-																		else {
 																				console.log('CallBack To Sonos ended');
 																				return;
+																			});
 																		}
-																	});
-																}
-															});
+																		else {
+																			console.log('CallBack To Sonos ended');
+																			return;
+	
+																		}
+																	});	
+																});	
+															}
+															else {
+																console.log(media.CurrentURI);
+																RunRadio(media.CurrentURI, function() {
+																	if (statusbefore != 'STOPPED' && statusbefore != 'PAUSED_PLAYBACK') {
+																		Play(function() {
+																			console.log('CallBack To Sonos ended');
+																			return;
+																		});
+																	}
+																	else {
+																		console.log('CallBack To Sonos ended');
+																		return;
+																	}
+																});
+															}
 														});
 													});
-											}
+												});
 	
 										});
 									});
