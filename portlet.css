@@ -12,6 +12,12 @@
 #SonosTitle {
 	padding-top: 5px;
 	background-color: #33A3EC;
+	font-family: 'Open Sans Condensed', sans-serif;
+	color: #FFF;
+	text-transform: capitalize;
+	font-size: 16px;
+	line-height: 28px;
+	padding: 0px 6px;
 }
 
 #SonosTitle strong{
