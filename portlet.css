@@ -1,3 +1,28 @@
-#logoSonos {
-	padding-top:10px;
+#Sonos {
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	display: block;
+	text-align: left;
+	position: absolute;
+	background-color: #000000;
 }
+
+#SonosTitle {
+	padding-top: 5px;
+	background-color: #33A3EC;
+}
+
+#SonosTitle strong{
+	margin-left: 15px;
+	color: #ffffff;
+}
+
+#SonosLogo {
+	/*border-radius: 10px;*/
+}
+
+/*.plugin-gridster .glyphicon-refresh {
+	color: #ffffff;
+}*/
