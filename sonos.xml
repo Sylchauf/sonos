@@ -5,7 +5,6 @@
     <item>Sarah</item>
      
     <one-of>
-	
 		<!-- Lance la musique/radio -->
 		<item weight="1.5">
 			<one-of>
@@ -15,7 +14,7 @@
 			<one-of>
 				<item>la musique<tag>out.action.actionSonos="play"</tag></item>
 				<item>la radio<tag>out.action.actionSonos="playradio"</tag></item>
-				<item>la détection d'enceintes<tag>out.action.actionSonos="test"</tag></item>
+				<item>la détection d'enceintes<tag>out.action.actionSonos="lookForSonos"</tag></item>
 			</one-of>
 		</item>
 		
@@ -78,6 +77,9 @@
     </one-of>
 	<!--<one-of repeat="0-1">
 		<item>dans le salon<tag>out.action.idPiece='salon'</tag></item>
+    </one-of>-->
+	<!--<one-of repeat="0-1">
+		<item>sur play5<tag>out.action.idSonos='4b8a26fc-be8c-11ea-e4cb-02e9f914ed63'</tag></item>
     </one-of>-->
     
     <tag>out.action._attributes.uri="http://127.0.0.1:8080/sarah/sonos";</tag>

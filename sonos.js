@@ -15,10 +15,12 @@
 		data.idPiece = data.client;
 	}
 	
-	//console.log(data.idSonos);
+	if (data.actionSonos == "lookForSonos") {
+			SonosAPI.Search();
+	}
 	
 	// Detection de l'enceinte sur laquelle vocaliser
-	if (data.actionSonos != 'saveConfig' && (data.idSonos == '' || data.idSonos == undefined)) {
+	else if (data.actionSonos != 'saveConfig' && (data.idSonos == '' || data.idSonos == undefined)) {
 		for (var idSonos in configSonosPerso.equipements[data.idPiece]) {
 			//console.log(idSonos+" => "+configSonosPerso.equipements[data.idPiece][idSonos].vocalisation);
 			if (configSonosPerso.equipements[data.idPiece][idSonos].vocalisation == 1)
@@ -129,24 +131,33 @@
 	
 	else if (data.actionSonos == "callBackToSonos")	{
 		/* On vérifie si SARAH à le droit de parler */
-		if (configSonosPerso.Silence != null)
+		if (configSonosPerso.Silence != null && configSonosPerso.Silence == 1)
 		{
 			//Déclaration du bouzin :)
-			var sStartTime = configSonosPerso.Silence.silenceStart.split(':');
-			var sEndTime = configSonosPerso.Silence.silenceEnd.split(':');
+			var sStartTime = configSonosPerso.silenceStart.split(':');
+			var sEndTime = configSonosPerso.silenceEnd.split(':');
 			var dActualTime = new Date();
-			var dStartTime = new Date(dActualTime.getFullYear(), dActualTime.getDay()-1, dActualTime.getDate(), sStartTime[0], sStartTime[1]).getTime();
-			var dEndTime = new Date(dActualTime.getFullYear(), dActualTime.getDay()-1, dActualTime.getDate(), sEndTime[0], sEndTime[1]).getTime();
-			dActualTime = dActualTime.getTime();
-			
-			//Comparaison
-			if (dActualTime > dEndTime || dActualTime < dStartTime) {
+			//Si heure actuelle > à l'heure prévue
+			if (dActualTime.getHours() >= sStartTime[0]) {
+				//Et que la différence entre minuit et l'heure actuelle est supérieur à minuit et l'heure de fin prévue
+				if ((24 - dActualTime.getHours()) >= (24 - sEndTime[0])) {
+					//On check les minutes
+					if (dActualTime.getMinutes() >= sStartTime[1] && dActualTime.getMinutes() <= sEndTime[1]) {
+						console.log("Silence");
+					}
+					else {
+						console.log("Talking");
+						SonosAPI.callBackToSonos(data.tts, lieu);
+					}
+				}
+				else {
+					console.log("Silence");
+				}
+			}
+			else {
 				console.log("Talking");
 				SonosAPI.callBackToSonos(data.tts, lieu);
-				}
-			else {
-				console.log("Silence");
-				}
+			}
 		}
 		else
 			SonosAPI.callBackToSonos(data.tts, lieu);
@@ -161,9 +172,7 @@
 
 	}
 	
-	else if (data.actionSonos == "lookForSonos") {
-			SonosAPI.Search();
-	}
+	
 	
 	else if (data.actionSonos == "test") {
 			SonosAPI.Search();
