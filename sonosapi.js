@@ -245,16 +245,32 @@ function GetMediaInfo(callbackfn) {
  * @param callbackfn
  */
 function Synchronise(source, cible, callbackfn) {
-	
-	macCible = eval('configSonosPerso.equipements.'+cible+'.mac');
-	lieu = eval('configSonosPerso.equipements.'+source+'.ip');
-	
-	SetQueue('x-rincon:RINCON_'+macCible+'01400', function() {
-		if (callbackfn) {
-			lieu = eval('configSonosPerso.equipements.'+cible+'.ip');
-			callbackfn();
+	/* Modif LBO - 29-06 - Suite aux modifs de la conf la récupération de l'IP/Mac à changé */
+	var id = null;
+
+	for (var idSonos in configSonosPerso.equipements[cible]) {
+		if (configSonosPerso.equipements[cible][idSonos].name == source) {
+			id = idSonos;
+			console.log(id);
+			break;
 		}
-	});
+	}
+	if (id == null) {
+		console.log("Enceinte introuvable");
+		callbackfn();
+	}
+	/* End */
+	else {
+		macCible = configSonosPerso.equipements[cible][id].mac;
+		lieu = configSonosPerso.equipements[cible][id].ip;
+		
+		SetQueue('x-rincon:RINCON_'+macCible+'01400', function() {
+			if (callbackfn) {
+				lieu = eval('configSonosPerso.equipements.'+cible+'.ip');
+				callbackfn();
+			}
+		});
+	}
 }
 
 /**
