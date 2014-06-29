@@ -131,31 +131,26 @@
 	
 	else if (data.actionSonos == "callBackToSonos")	{
 		/* On vérifie si SARAH à le droit de parler */
-		if (configSonosPerso.Silence != null && configSonosPerso.Silence == 1)
+		if (configSonosPerso.Silence != null && configSonosPerso.Silence == 1
+		&& configSonosPerso.silenceStart != null && configSonosPerso.silenceStart != ""
+		&& configSonosPerso.silenceEnd != null && configSonosPerso.silenceEnd != "")
 		{
 			//Déclaration du bouzin :)
 			var sStartTime = configSonosPerso.silenceStart.split(':');
 			var sEndTime = configSonosPerso.silenceEnd.split(':');
 			var dActualTime = new Date();
-			//Si heure actuelle > à l'heure prévue
-			if (dActualTime.getHours() >= sStartTime[0]) {
-				//Et que la différence entre minuit et l'heure actuelle est supérieur à minuit et l'heure de fin prévue
-				if ((24 - dActualTime.getHours()) >= (24 - sEndTime[0])) {
-					//On check les minutes
-					if (dActualTime.getMinutes() >= sStartTime[1] && dActualTime.getMinutes() <= sEndTime[1]) {
-						console.log("Silence");
-					}
-					else {
-						console.log("Talking");
-						SonosAPI.callBackToSonos(data.tts, lieu);
-					}
-				}
-				else {
-					console.log("Silence");
-				}
-			}
-			else {
-				console.log("Talking");
+			var dStartTime = new Date();
+			dStartTime.setHours(sStartTime[0]);
+			dStartTime.setMinutes(sStartTime[1]);
+			var dEndTime = new Date();
+			dEndTime.setHours(sEndTime[0]);
+			dEndTime.setMinutes(sEndTime[1]);
+			if (dEndTime < dActualTime)
+				dEndTime.setDate(dActualTime.getDate()+1);
+			
+			if (dActualTime > dStartTime && dActualTime < dEndTime) {
+				console.log("Heure de Silence: "+data.tts);
+			} else {
 				SonosAPI.callBackToSonos(data.tts, lieu);
 			}
 		}
