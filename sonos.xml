@@ -70,14 +70,26 @@
 		<!-- Synchro de la musique pour les pocesseurs de plusieurs Sonos -->
 		<item>synchronise la musique<tag>out.action.actionSonos="synchronise"</tag>
 			<one-of>
-				<item>vers la salon<tag>out.action.syncFrom='salon'</tag></item>
-				<item>depuis la salon<tag>out.action.syncTo='SARAH1'</tag></item>
+				<item>vers la salon<tag>out.action.syncFrom='Salon'</tag></item>
+				<item>depuis la salon<tag>out.action.syncTo='Cuisine'</tag></item>
 			</one-of>
 		</item>
     </one-of>
-	<!--<one-of repeat="0-1">
-		<item>dans le salon<tag>out.action.idPiece='salon'</tag></item>
-    </one-of>-->
+		
+	<!-- Choix de la pièce -->
+	<item repeat="0-1">
+		<one-of>
+			<item>au</item>
+			<item>à la</item>
+			<item>dans le</item>
+			<item>dans la</item>
+		</one-of>
+		<one-of>
+			<item>salon<tag>out.action.idPiece='SARAH1';out.action.idSonos='a77905c9-1edb-6f98-7932-e90f9979f6d4'</tag></item>
+			<item>cuisine<tag>out.action.idPiece='SARAH1';out.action.idSonos='49cf955f-0693-6c59-be8e-b4033f4406f5'</tag></item>
+		</one-of>
+	</item>
+	
 	<!--<one-of repeat="0-1">
 		<item>sur play5<tag>out.action.idSonos='4b8a26fc-be8c-11ea-e4cb-02e9f914ed63'</tag></item>
     </one-of>-->

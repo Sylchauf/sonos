@@ -449,7 +449,7 @@ function callBackToSonos(message, lieu) {
  * Permet d'envoyer une requete SOAP sur un sonos
  */
 function upnp_sonos(lieu,SonosUrl,SonosAction,SonosService,SonosArgs, callBackUpnp) {
-			
+
 	var SoapRequest =
 		'<?xml version="1.0" encoding="utf-8"?>' +
 		'<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">' +

@@ -41,12 +41,13 @@
 					break;
 			}
 		}
-		//console.log("Piece => "+data.idPiece + " et Enceinte => " + data.idSonos);
-		lieu = configSonosPerso.equipements[data.idPiece][data.idSonos].ip;
-		mac = configSonosPerso.equipements[data.idPiece][data.idSonos].mac;
-		//console.log("Lieu => "+lieu+" et mac => "+mac);
 	}
-
+	
+	//console.log("Piece => "+data.idPiece + " et Enceinte => " + data.idSonos);
+	lieu = configSonosPerso.equipements[data.idPiece][data.idSonos].ip;
+	mac = configSonosPerso.equipements[data.idPiece][data.idSonos].mac;
+	//console.log("Lieu => "+lieu+" et mac => "+mac);
+	
 	// Actions
 	if (data.actionSonos == "play" || data.actionSonos == "playradio")	{		
 		SonosAPI.GetInfosPosition(function(infos) {
