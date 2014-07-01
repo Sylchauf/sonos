@@ -146,9 +146,12 @@
 			var dEndTime = new Date();
 			dEndTime.setHours(sEndTime[0]);
 			dEndTime.setMinutes(sEndTime[1]);
+
 			if (dEndTime < dActualTime)
 				dEndTime.setDate(dActualTime.getDate()+1);
-			
+			if (dStartTime > dActualTime)
+				dStartTime.setDate(dActualTime.getDate()-1);
+
 			if (dActualTime > dStartTime && dActualTime < dEndTime) {
 				console.log("Heure de Silence: "+data.tts);
 			} else {
