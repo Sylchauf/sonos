@@ -146,14 +146,20 @@
 			var dEndTime = new Date();
 			dEndTime.setHours(sEndTime[0]);
 			dEndTime.setMinutes(sEndTime[1]);
-
-			if (dEndTime < dActualTime)
-				dEndTime.setDate(dActualTime.getDate()+1);
+			console.log(dStartTime);
+			console.log(dActualTime);
+			console.log(dEndTime);
 			if (dStartTime > dActualTime)
 				dStartTime.setDate(dActualTime.getDate()-1);
-
+				//A revoir ne marche pas le matin
+			if (dActualTime > dStartTime && dEndTime < dActualTime)
+				dEndTime.setDate(dActualTime.getDate()+1);
+			console.log(dStartTime);
+			console.log(dActualTime);
+			console.log(dEndTime);
 			if (dActualTime > dStartTime && dActualTime < dEndTime) {
 				console.log("Heure de Silence: "+data.tts);
+				
 			} else {
 				SonosAPI.callBackToSonos(data.tts, lieu);
 			}
