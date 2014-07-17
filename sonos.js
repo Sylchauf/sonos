@@ -42,11 +42,12 @@
 			}
 		}
 	}
-	
-	//console.log("Piece => "+data.idPiece + " et Enceinte => " + data.idSonos);
-	lieu = configSonosPerso.equipements[data.idPiece][data.idSonos].ip;
-	mac = configSonosPerso.equipements[data.idPiece][data.idSonos].mac;
-	//console.log("Lieu => "+lieu+" et mac => "+mac);
+	if (data.idPiece != null && data.idSonos != null) {
+		//console.log("Piece => "+data.idPiece + " et Enceinte => " + data.idSonos);
+		lieu = configSonosPerso.equipements[data.idPiece][data.idSonos].ip;
+		mac = configSonosPerso.equipements[data.idPiece][data.idSonos].mac;
+		//console.log("Lieu => "+lieu+" et mac => "+mac);
+	}
 	
 	// Actions
 	if (data.actionSonos == "play" || data.actionSonos == "playradio")	{		
@@ -149,11 +150,13 @@
 			console.log(dStartTime);
 			console.log(dActualTime);
 			console.log(dEndTime);
-			if (dStartTime > dActualTime)
-				dStartTime.setDate(dActualTime.getDate()-1);
+			//if (dStartTime > dActualTime)
+				//dStartTime.setDate(dActualTime.getDate()-1);
 				//A revoir ne marche pas le matin
 			if (dActualTime > dStartTime && dEndTime < dActualTime)
 				dEndTime.setDate(dActualTime.getDate()+1);
+			else if (dActualTime < dStartTime && dEndTime > dActualTime)
+				dStartTime.setDate(dActualTime.getDate()-1);
 			console.log(dStartTime);
 			console.log(dActualTime);
 			console.log(dEndTime);
