@@ -147,9 +147,9 @@
 			var dEndTime = new Date();
 			dEndTime.setHours(sEndTime[0]);
 			dEndTime.setMinutes(sEndTime[1]);
-			console.log(dStartTime);
-			console.log(dActualTime);
-			console.log(dEndTime);
+			//console.log(dStartTime);
+			//console.log(dActualTime);
+			//console.log(dEndTime);
 			//if (dStartTime > dActualTime)
 				//dStartTime.setDate(dActualTime.getDate()-1);
 				//A revoir ne marche pas le matin
@@ -157,9 +157,9 @@
 				dEndTime.setDate(dActualTime.getDate()+1);
 			else if (dActualTime < dStartTime && dEndTime > dActualTime)
 				dStartTime.setDate(dActualTime.getDate()-1);
-			console.log(dStartTime);
-			console.log(dActualTime);
-			console.log(dEndTime);
+			//console.log(dStartTime);
+			//console.log(dActualTime);
+			//console.log(dEndTime);
 			if (dActualTime > dStartTime && dActualTime < dEndTime) {
 				console.log("Heure de Silence: "+data.tts);
 				
