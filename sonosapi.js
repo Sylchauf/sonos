@@ -708,6 +708,7 @@ module.exports.setVolume = setVolume;
 module.exports.callBackToSonos = callBackToSonos;
 module.exports.getTopology = getTopology;
 module.exports.GetInfosPosition = GetInfosPosition;
+module.exports.GetTransportStatus = GetTransportStatus;
 module.exports.volDown = volDown;
 module.exports.volUp = volUp;
 module.exports.Search = Search;

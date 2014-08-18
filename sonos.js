@@ -31,7 +31,7 @@
 		if (data.idSonos == undefined) {
 			for (var piece in configSonosPerso.equipements) {
 				for (var sonos in configSonosPerso.equipements[piece]) {
-					if (eval('configSonosPerso.equipements.'+piece+'.'+sonos+'.vocalisation') == 1) {
+					if (configSonosPerso.equipements[piece][sonos].vocalisation == 1 || configSonos.exportAllVoice == 0) {
 						data.idPiece = piece;
 						data.idSonos = sonos;
 						break;
