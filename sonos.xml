@@ -2,11 +2,9 @@
   <rule id="ruleSonos" scope="public">
     <example>Sarah allume la musique dans le salon</example>
     <tag>out.action=new Object(); </tag>
-	
     <item>Sarah</item>
      
     <one-of>
-	
 		<!-- Lance la musique/radio -->
 		<item weight="1.5">
 			<one-of>
@@ -16,6 +14,7 @@
 			<one-of>
 				<item>la musique<tag>out.action.actionSonos="play"</tag></item>
 				<item>la radio<tag>out.action.actionSonos="playradio"</tag></item>
+				<item>la détection d'enceintes<tag>out.action.actionSonos="lookForSonos"</tag></item>
 			</one-of>
 		</item>
 		
@@ -71,23 +70,35 @@
 		<!-- Synchro de la musique pour les pocesseurs de plusieurs Sonos -->
 		<item>synchronise la musique<tag>out.action.actionSonos="synchronise"</tag>
 			<one-of>
-				<item>vers la salon<tag>out.action.syncFrom='SALON'</tag></item>
-				<item>depuis le bureau<tag>out.action.syncFrom='BUREAU1'</tag></item>
-				<item>depuis le salon<tag>out.action.syncFrom='SALON'</tag></item>
-				<item>vers le bureau<tag>out.action.syncTo='BUREAU1'</tag></item>
+				<!-- ##DEBUT_AJOUT_PIECE_SYNCHRO## -->
+				<item>vers la Cuisine<tag>out.action.syncFrom=Cuisine</tag></item>
+				<item>depuis la Cuisine<tag>out.action.syncTo=Cuisine</tag></item>
+				<item>vers le Salon<tag>out.action.syncFrom=Salon</tag></item>
+				<item>depuis le Salon<tag>out.action.syncTo=Salon</tag></item>
+				<!-- ##FIN_AJOUT_PIECE_SYNCHRO## -->
 			</one-of>
 		</item>
     </one-of>
+		
+	<!-- Choix de la pièce -->
+	<item repeat="0-1">
+		<one-of>
+			<item>au</item>
+			<item>à la</item>
+			<item>dans le</item>
+			<item>dans la</item>
+		</one-of>
+		<one-of>
+			<!-- ##DEBUT_CHOIX_DE_LA_PIECE## -->
+			<item>Cuisine<tag>out.action.idPiece='SARAH1';out.action.idSonos='49cf955f-0693-6c59-be8e-b4033f4406f5'</tag></item>
+			<item>Salon<tag>out.action.idPiece='SARAH1';out.action.idSonos='a77905c9-1edb-6f98-7932-e90f9979f6d4'</tag></item>
+			<!-- ##FIN_CHOIX_DE_LA_PIECE## -->
+		</one-of>
+	</item>
 	
-	
-	<one-of repeat="0-1">
-		<!-- ##DEBUT CHOIX_DE_LA_PIECE## -->
-		<item>dans le SALON<tag>out.action.idPiece='SALON'</tag></item>
-		<item>dans le BUREAU<tag>out.action.idPiece='BUREAU'</tag></item>
-		<!-- ##FIN CHOIX_DE_LA_PIECE## -->
-    </one-of>
-	
-	
+	<!--<one-of repeat="0-1">
+		<item>sur play5<tag>out.action.idSonos='4b8a26fc-be8c-11ea-e4cb-02e9f914ed63'</tag></item>
+    </one-of>-->
     
     <tag>out.action._attributes.uri="http://127.0.0.1:8080/sarah/sonos";</tag>
   </rule>

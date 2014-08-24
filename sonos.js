@@ -200,20 +200,34 @@
 	function generateXml(configSonosPerso) {
 		// On parcours la configuration pour connaitre toutes nos pièces
 		var mesEquipements = '';
-		for (var idSonos in configSonosPerso.equipements) {
-			mesEquipements += '\t\t<item>dans le '+idSonos+'<tag>out.action.idPiece=\''+idSonos+'\'</tag></item>\n';
-		}
+		var equipementsSynchro = '';
 		
+		var motFeminin = ['cuisine', 'chambre'];
 		
-		
+		//On boucle sur chaque pièce
+		for (var piece in configSonosPerso.equipements) {
+			for (var sonos in configSonosPerso.equipements[piece]) {
+				mesEquipements += '\t\t\t<item>'+configSonosPerso.equipements[piece][sonos]["name"]+'<tag>out.action.idPiece=\''+piece+'\';out.action.idSonos=\''+sonos+'\'</tag></item>\n';
+				equipementsSynchro += '\t\t\t\t<item>vers '+ (motFeminin.indexOf(configSonosPerso.equipements[piece][sonos]["name"].toLowerCase()) > -1 ? 'la' : 'le') +' '+configSonosPerso.equipements[piece][sonos]["name"]+'<tag>out.action.syncFrom='+configSonosPerso.equipements[piece][sonos]["name"]+'</tag></item>\n'
+				equipementsSynchro += '\t\t\t\t<item>depuis '+ (motFeminin.indexOf(configSonosPerso.equipements[piece][sonos]["name"].toLowerCase()) > -1 ? 'la' : 'le') +' '+configSonosPerso.equipements[piece][sonos]["name"]+'<tag>out.action.syncTo='+configSonosPerso.equipements[piece][sonos]["name"]+'</tag></item>\n'
+				}
+			}
+
 		// On écrit le nouveau XML
 		var fileXML = 'plugins/sonos/sonos.xml';
 		var xml = fs.readFileSync(fileXML, 'utf8');
-		replace = '##DEBUT CHOIX_DE_LA_PIECE## -->\n';
+		//On ajoute les equipements
+		replace = '##DEBUT_CHOIX_DE_LA_PIECE## -->\n';
 		replace += mesEquipements;
-		replace += '\t\t<!-- ##FIN';
-		var regexp = new RegExp('##DEBUT[^*]+##FIN', 'gm');
-		var xml = xml.replace(regexp, replace);
+		replace += '\t\t\t<!-- ##FIN_CHOIX_DE_LA_PIECE';
+		var regexp = new RegExp('##DEBUT_CHOIX_DE_LA_PIECE[^*]+##FIN_CHOIX_DE_LA_PIECE', 'gm');
+		xml = xml.replace(regexp, replace);
+		//On ajoute les equipements pour la synchro
+		replace = '##DEBUT_AJOUT_PIECE_SYNCHRO## -->\n';
+		replace += equipementsSynchro;
+		replace += '\t\t\t\t<!-- ##FIN_AJOUT_PIECE_SYNCHRO';
+		var regexp = new RegExp('##DEBUT_AJOUT_PIECE_SYNCHRO[^*]+##FIN_AJOUT_PIECE_SYNCHRO', 'gm');
+		xml = xml.replace(regexp, replace);
 		fs.writeFileSync(fileXML, xml, 'utf8');
 	}
 	data.idPiece = "";
