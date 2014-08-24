@@ -152,12 +152,58 @@ function GetTransportStatus(callbackfn) {
 	upnp_sonos(lieu,url,action,service,args, function(body) {
 		if (callbackfn) {
 			monregex = new RegExp('<CurrentTransportState>(.*?)<\/CurrentTransportState>');
-			 var results = body.match(monregex);
-			
+			var results = body.match(monregex);
 			if (results != null) {
 				result = results[1];
 				callbackfn(result);
 			}
+		}
+	});
+}
+
+function GetTransportInfos(callbackfn) {
+	var url = '/MediaRenderer/AVTransport/Control';
+	var action = 'GetPositionInfo';
+	var service = 'urn:schemas-upnp-org:service:AVTransport:1';
+	var args = '<InstanceID>0</InstanceID>';
+	upnp_sonos(lieu,url,action,service,args, function(body) {
+		if (callbackfn) {
+			var data = {};
+			
+			monregex = new RegExp('<TrackMetaData>(.*?)<\/TrackMetaData>');
+			var results = body.match(monregex);
+			if (results != null) {
+				data.TrackMetaData = results[1];
+				
+				data.TrackMetaData = data.TrackMetaData.replace(/&lt;/g, '<');
+				data.TrackMetaData = data.TrackMetaData.replace(/&gt;/g, '>');
+				data.TrackMetaData = data.TrackMetaData.replace(/&quot;/g, '"');
+				data.TrackMetaData = data.TrackMetaData.replace(/&amp;/g, '&');
+				data.TrackMetaData = data.TrackMetaData.replace(/%3a/g, ':');
+				data.TrackMetaData = data.TrackMetaData.replace(/%2f/g, '/');
+				data.TrackMetaData = data.TrackMetaData.replace(/%25/g, '%');
+				
+				monregex = new RegExp('<dc:title>(.*?)<\/dc:title>');
+				var results = data.TrackMetaData.match(monregex);
+				if (results != null) {
+					data.title = results[1];
+				}
+				
+				monregex = new RegExp('<upnp:albumArtURI>(.*?)<\/upnp:albumArtURI>');
+				var results = data.TrackMetaData.match(monregex);
+				if (results != null) {
+					data.albumArtURI = results[1];
+				}
+				
+				monregex = new RegExp('<dc:creator>(.*?)<\/dc:creator>');
+				var results = data.TrackMetaData.match(monregex);
+				if (results != null) {
+					data.AlbumArtist = results[1];
+				}
+			}
+			
+			callbackfn(data);
+			
 		}
 	});
 }
@@ -209,6 +255,7 @@ function GetInfosPosition(callbackfn) {
 		if (results != null) {
 			data.trackuri = results[1];
 		}
+
 		
 		
 		callbackfn(data);
@@ -709,6 +756,7 @@ module.exports.callBackToSonos = callBackToSonos;
 module.exports.getTopology = getTopology;
 module.exports.GetInfosPosition = GetInfosPosition;
 module.exports.GetTransportStatus = GetTransportStatus;
+module.exports.GetTransportInfos = GetTransportInfos;
 module.exports.volDown = volDown;
 module.exports.volUp = volUp;
 module.exports.Search = Search;

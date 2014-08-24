@@ -1,15 +1,14 @@
 ﻿exports.action = function(data, callback, config, SARAH){
 
-	// Chargement de la configuration
+	// Chargement des configurations
 	configSonosPerso =  JSON.parse(fs.readFileSync('plugins/sonos/configSonosPerso.prop','utf8'));
 	configSarah = config;
  
-	// Chargement des modules necessaire
+	// Chargement des modules nécessaire
 	xml2js = require('xml2js');
 	request = require('request');
 	SonosAPI = require('./sonosapi.js');
 	
-	//console.log("****"+data.client+"****");
 	// Detection de la pièce / client Sarah
 	if (data.idPiece == '' || data.idPiece == undefined) {
 		data.idPiece = data.client;
@@ -18,11 +17,13 @@
 	if (data.actionSonos == "lookForSonos") {
 			SonosAPI.Search();
 	}
+	else if (data.actionSonos == "generateXml") {
+		
+	}
 	
 	// Detection de l'enceinte sur laquelle vocaliser
 	else if (data.actionSonos != 'saveConfig' && (data.idSonos == '' || data.idSonos == undefined)) {
 		for (var idSonos in configSonosPerso.equipements[data.idPiece]) {
-			//console.log(idSonos+" => "+configSonosPerso.equipements[data.idPiece][idSonos].vocalisation);
 			if (configSonosPerso.equipements[data.idPiece][idSonos].vocalisation == 1)
 				data.idSonos = idSonos;
 		}
@@ -43,10 +44,8 @@
 		}
 	}
 	if (data.idPiece != null && data.idSonos != null) {
-		//console.log("Piece => "+data.idPiece + " et Enceinte => " + data.idSonos);
 		lieu = configSonosPerso.equipements[data.idPiece][data.idSonos].ip;
 		mac = configSonosPerso.equipements[data.idPiece][data.idSonos].mac;
-		//console.log("Lieu => "+lieu+" et mac => "+mac);
 	}
 	
 	// Actions
@@ -176,15 +175,9 @@
 
 		saveFile('sonos', 'configSonosPerso.prop', json);
 		
+		generateXml(configSonosPerso);
+		
 		callback();
-
-	}
-	
-	
-	
-	else if (data.actionSonos == "test") {
-			SonosAPI.Search();
-		//x-sonosapi-radio:Ivvo_gGiNo8?sid=151&amp;flags=108
 
 	}
 	
@@ -202,6 +195,26 @@
 		} catch(ex) {
 			winston.log('error', 'Error while saving properties:', ex.message);
 		}
+	}
+	
+	function generateXml(configSonosPerso) {
+		// On parcours la configuration pour connaitre toutes nos pièces
+		var mesEquipements = '';
+		for (var idSonos in configSonosPerso.equipements) {
+			mesEquipements += '\t\t<item>dans le '+idSonos+'<tag>out.action.idPiece=\''+idSonos+'\'</tag></item>\n';
+		}
+		
+		
+		
+		// On écrit le nouveau XML
+		var fileXML = 'plugins/sonos/sonos.xml';
+		var xml = fs.readFileSync(fileXML, 'utf8');
+		replace = '##DEBUT CHOIX_DE_LA_PIECE## -->\n';
+		replace += mesEquipements;
+		replace += '\t\t<!-- ##FIN';
+		var regexp = new RegExp('##DEBUT[^*]+##FIN', 'gm');
+		var xml = xml.replace(regexp, replace);
+		fs.writeFileSync(fileXML, xml, 'utf8');
 	}
 	data.idPiece = "";
 };
