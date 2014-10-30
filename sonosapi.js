@@ -2,6 +2,8 @@ var devices = new Array();
 
 /**
  * Permet de lancer une radio
+ * @param URI
+ * @param callBackfn
  */
 function RunRadio(radio, callbackfn) {
 	var url = '/MediaRenderer/AVTransport/Control';
@@ -413,11 +415,22 @@ function GoToPlaylistMode(callbackfn) {
  * @param message
  * @param lieu
  */
-function callBackToSonos(message, lieu) {
+function callBackToSonos(message, lieu, NameOfVoice, IsVoxygenVoice) {
 	console.log('CallBack To Sonos '+lieu+' requested : '+message);
 	// on genere le tts en wav
 	var exec = require('child_process').exec;
-	
+
+	//On récupère le type de voix souhaité
+	//Temp a déplacer dans la page web
+	var NameOfVoice = "Electra";
+	var IsVoxygenVoice = false;
+	if (IsVoxygenVoice) {
+		var urlToUse = "http://www.voxygen.fr/sites/all/modules/voxygen_voices/assets/proxy/index.php?method=redirect&text="+encodeURIComponent(message.replace(/[^a-zA-Z0-9éçè@êàâû€$£ù \.,()!:;'#-_^%*]/g, ""))+"&voice="+NameOfVoice+"&ts=14030902642";
+	}
+	else {
+		var urlToUse = 'http://'+configSarah.http.ip+':'+configSarah.http.port+'/assets/sonos/tempvoice.wav';
+	}
+console.log(urlToUse);
 	child = exec('cd plugins/sonos & ttstowav.vbs "'+message.replace(/[^a-zA-Z0-9éçè@êàâû€$£ù \.,()!:;'#-_^%*]/g, "")+'"',
 	  function (error, stdout, stderr) {
 		if (error !== null) {
@@ -432,7 +445,7 @@ function callBackToSonos(message, lieu) {
 							GetInfosPosition(function(position) {
 								Stop(function () {
 									setVolume(configSonosPerso.volumeAnnonce, function () {
-										RunRadio('http://'+configSarah.http.ip+':'+configSarah.http.port+'/assets/sonos/tempvoice.wav', function(tracknumbertemp) {
+										RunRadio(urlToUse, function() {
 											monregex = new RegExp('x-file-cifs://(.*?)');
 											var results = position.trackuri.match(monregex);
 												// C'est un mp3 ou equivalent						
@@ -479,7 +492,6 @@ function callBackToSonos(message, lieu) {
 														});
 													});
 												});
-	
 										});
 									});
 								});
@@ -506,7 +518,7 @@ function upnp_sonos(lieu,SonosUrl,SonosAction,SonosService,SonosArgs, callBackUp
 				'</u:'+SonosAction+'>'+
 			'</s:Body>' +
 		'</s:Envelope>';
-				
+
 	request({ 
 		'uri'     : 'http://'+lieu+':1400'+SonosUrl,
 		'method'  : 'post',
