@@ -415,7 +415,7 @@ function GoToPlaylistMode(callbackfn) {
  * @param message
  * @param lieu
  */
-function callBackToSonos(message, lieu, NameOfVoice, IsVoxygenVoice) {
+function callBackToSonos(message, lieu) {
 	console.log('CallBack To Sonos '+lieu+' requested : '+message);
 	// on genere le tts en wav
 	var exec = require('child_process').exec;
