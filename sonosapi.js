@@ -411,8 +411,9 @@ function GoToPlaylistMode(callbackfn) {
 
 /**
  * Récupère le type d'URL qui sera donné à SARAH, sert à modifier la voix
+ * @param message
  */
-function getUrl() {
+function getUrl(message) {
 	//On récupère dans la conf le type de voix souhaité
 	var typeOfVoice = configSonosPerso.typeOfVoice;
 	var urlToUse;
@@ -425,7 +426,7 @@ function getUrl() {
 			urlToUse = 'http://'+configSarah.http.ip+':'+configSarah.http.port+'/assets/sonos/tempvoice.wav';
 		break;
 		default :
-			urlToUse = "http://www.voxygen.fr/sites/all/modules/voxygen_voices/assets/proxy/index.php?method=redirect&text="+encodeURIComponent(message.replace(/[^a-zA-Z0-9éçè@êàâû€$£ù \.,()!:;'#-_^%*]/g, ""))+"&voice="+NameOfVoice+"&ts=14030902642";
+			urlToUse = "http://www.voxygen.fr/sites/all/modules/voxygen_voices/assets/proxy/index.php?method=redirect&text="+encodeURIComponent(message.replace(/[^a-zA-Z0-9éçè@êàâû€$£ù \.,()!:;'#-_^%*]/g, ""))+"&voice="+typeOfVoice+"&ts=14030902642";
 		break;
 	}
 	return urlToUse;
@@ -441,7 +442,7 @@ function callBackToSonos(message, lieu) {
 	// on genere le tts en wav
 	var exec = require('child_process').exec;
 
-	var urlToUse = getUrl();
+	var urlToUse = getUrl(message);
 	console.log(urlToUse);
 	
 	child = exec('cd plugins/sonos & ttstowav.vbs "'+message.replace(/[^a-zA-Z0-9éçè@êàâû€$£ù \.,()!:;'#-_^%*]/g, "")+'"',
