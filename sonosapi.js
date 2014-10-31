@@ -409,6 +409,27 @@ function GoToPlaylistMode(callbackfn) {
 	});
 }
 
+/**
+ * Récupère le type d'URL qui sera donné à SARAH, sert à modifier la voix
+ */
+function getUrl() {
+	//On récupère dans la conf le type de voix souhaité
+	var typeOfVoice = configSonosPerso.typeOfVoice;
+	var urlToUse;
+	switch(typeOfVoice)
+	{
+		case "Std_SARAH" : 
+			urlToUse = 'http://'+configSarah.http.ip+':'+configSarah.http.port+'/assets/sonos/tempvoice.wav';
+		break;
+		case null :
+			urlToUse = 'http://'+configSarah.http.ip+':'+configSarah.http.port+'/assets/sonos/tempvoice.wav';
+		break;
+		default :
+			urlToUse = "http://www.voxygen.fr/sites/all/modules/voxygen_voices/assets/proxy/index.php?method=redirect&text="+encodeURIComponent(message.replace(/[^a-zA-Z0-9éçè@êàâû€$£ù \.,()!:;'#-_^%*]/g, ""))+"&voice="+NameOfVoice+"&ts=14030902642";
+		break;
+	}
+	return urlToUse;
+}
 
 /**
  * Permet d'envoyer un TTS sur les equipements SONOS
@@ -420,17 +441,9 @@ function callBackToSonos(message, lieu) {
 	// on genere le tts en wav
 	var exec = require('child_process').exec;
 
-	//On récupère le type de voix souhaité
-	//Temp a déplacer dans la page web
-	var NameOfVoice = "Electra";
-	var IsVoxygenVoice = false;
-	if (IsVoxygenVoice) {
-		var urlToUse = "http://www.voxygen.fr/sites/all/modules/voxygen_voices/assets/proxy/index.php?method=redirect&text="+encodeURIComponent(message.replace(/[^a-zA-Z0-9éçè@êàâû€$£ù \.,()!:;'#-_^%*]/g, ""))+"&voice="+NameOfVoice+"&ts=14030902642";
-	}
-	else {
-		var urlToUse = 'http://'+configSarah.http.ip+':'+configSarah.http.port+'/assets/sonos/tempvoice.wav';
-	}
-console.log(urlToUse);
+	var urlToUse = getUrl();
+	console.log(urlToUse);
+	
 	child = exec('cd plugins/sonos & ttstowav.vbs "'+message.replace(/[^a-zA-Z0-9éçè@êàâû€$£ù \.,()!:;'#-_^%*]/g, "")+'"',
 	  function (error, stdout, stderr) {
 		if (error !== null) {
@@ -715,7 +728,7 @@ function Search() {
 		    			});
 		    			if (insert) {
 		    				devices.push(device);
-		    				
+
 		    				content = JSON.stringify(devices);
 		    				
 			    			saveFile('sonos', 'devices.tmp', content);
