@@ -159,22 +159,24 @@
 			var dEndTime = new Date();
 			dEndTime.setHours(sEndTime[0]);
 			dEndTime.setMinutes(sEndTime[1]);
-			console.log("----- DEBUG ----");
-			console.log("Start : "+dStartTime);
-			console.log("Actual : "+dActualTime);
-			console.log("End : "+dEndTime);
-			console.log("----- DEBUG ----");
-			if (dActualTime > dStartTime && dEndTime < dActualTime)
-				dEndTime.setDate(dActualTime.getDate()+1);
-			else if (dActualTime < dStartTime && dEndTime > dActualTime)
-				dStartTime.setDate(dActualTime.getDate()-1);
-			console.log("----- DEBUG ----");
-			console.log("Start : "+dStartTime);
-			console.log("Actual : "+dActualTime);
-			console.log("End : "+dEndTime);
-			console.log("----- DEBUG ----");
+			var dMidnight = new Date();
+			dMidnight.setHours(0);
+			dMidnight.setMinutes(0);
+			dMidnight.setSeconds(0);
+			//console.log("----- DEBUG ----\nMinuit : "+dMidnight + "\nStart : "+dStartTime + "\nActual : "+dActualTime + "\nEnd : "+dEndTime + "\n----- DEBUG ----");
+			//Si la date de fin est inférieur à la date de départ...
+			if (dEndTime < dStartTime) {
+				if ( dActualTime > dMidnight && dActualTime < dEndTime ) {
+					dStartTime.setDate(dActualTime.getDate()-1);
+				}
+				else {
+					dEndTime.setDate(dActualTime.getDate()+1);
+				}
+			}
+			//else if (dActualTime < dStartTime && dEndTime > dActualTime)
+			//	dStartTime.setDate(dActualTime.getDate()-1);
+			//console.log("----- DEBUG ----\nMinuit : "+dMidnight + "\nStart : "+dStartTime + "\nActual : "+dActualTime + "\nEnd : "+dEndTime + "\n----- DEBUG ----");
 			if (dActualTime > dStartTime && dActualTime < dEndTime) {
-				SonosAPI.callBackToSonos(data.tts, lieu);//TEMP POUR LES TESTS
 				console.log("Heure de Silence: "+data.tts);
 				callback();
 			}
