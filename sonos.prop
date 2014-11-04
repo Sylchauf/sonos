@@ -2,7 +2,7 @@
   "modules" : { 
     "sonos"  : {
       "description": "Plugin de pilotage des SONOS pour le projet S.A.R.A.H",
-	  "version" : "2.1"
+	  "version" : "2.2"
     }
   }
 }

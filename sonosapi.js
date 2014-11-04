@@ -6,6 +6,7 @@ var devices = new Array();
  * @param callBackfn
  */
 function RunRadio(radio, callbackfn) {
+	console.log("Url audio : " + radio);
 	var url = '/MediaRenderer/AVTransport/Control';
 	var action = 'SetAVTransportURI';
 	var service = 'urn:schemas-upnp-org:service:AVTransport:1';
@@ -17,6 +18,10 @@ function RunRadio(radio, callbackfn) {
 	});
 }
 
+/**
+ * Permet d'encoder une chaine au format HTML
+ * @param chaine
+ */
 function htmlEnc(s) {
 	return s.replace(/&/g, '&amp;')
 			.replace(/</g, '&lt;')
@@ -352,11 +357,11 @@ function Seek(type,position, callbackfn) {
  * @param URI
  * @param callbackfn
  */
-function AddURIToQueue(URI,callbackfn){
+function AddURIToQueue(URI, METADATA, callbackfn){
 	var url = '/MediaRenderer/AVTransport/Control';
 	var action = 'AddURIToQueue';
 	var service = 'urn:schemas-upnp-org:service:AVTransport:1';
-	var args = '<InstanceID>0</InstanceID><EnqueuedURI>'+URI+'</EnqueuedURI><EnqueuedURIMetaData></EnqueuedURIMetaData><DesiredFirstTrackNumberEnqueued>0</DesiredFirstTrackNumberEnqueued><EnqueueAsNext>0</EnqueueAsNext>';
+	var args = '<InstanceID>0</InstanceID><EnqueuedURI>'+URI+'</EnqueuedURI><EnqueuedURIMetaData>'+METADATA+'</EnqueuedURIMetaData><DesiredFirstTrackNumberEnqueued>0</DesiredFirstTrackNumberEnqueued><EnqueueAsNext>0</EnqueueAsNext>';
 	
 	upnp_sonos(lieu,url,action,service,args, function(body) {
 
@@ -392,6 +397,18 @@ function RemoveTrackFromQueue(tracknumber, callbackfn)
 		}
 	});
 }
+function RemoveAllTracksFromQueue(callbackfn)
+{
+	var url = '/MediaRenderer/AVTransport/Control';
+	var action = 'RemoveAllTracksFromQueue';
+	var service = 'urn:schemas-upnp-org:service:AVTransport:1';
+	var args = '<InstanceID>0</InstanceID>';
+	upnp_sonos(lieu,url,action,service,args, function(body) {
+		if (callbackfn) {	
+			callbackfn();
+		}
+	});
+}
 
 /**
  * Permet de changer le mode en 'Playlist'
@@ -409,6 +426,42 @@ function GoToPlaylistMode(callbackfn) {
 	});
 }
 
+var file;
+/**
+ * Permet de génerer le fichier audio à jouer
+ * @param tts à génerer
+ * @param callback
+ */
+function generateFile(tts, callbackfn) {
+	//On récupère dans la conf le type de voix souhaité
+	var typeOfVoice = configSonosPerso.typeOfVoice;
+	var urlToUse;
+	switch(typeOfVoice)
+	{
+		case "Std_SARAH" : 
+		case null :
+			file = 'voice.wav';
+			var exec = require('child_process').exec;
+			child = exec('cd plugins/sonos & ttstowav.vbs "'+tts.replace(/[^a-zA-Z0-9éçè@êàâû€$£ù \.,()!:;'#-_^%*]/g, "")+'"',
+				function (error, stdout, stderr) {
+				if (error !== null) {
+				  console.log('exec error: ' + error);
+				}
+				else {
+					callbackfn();
+				}
+			});
+		break;
+		default :
+			file = 'voxygen.mp3';
+			request = require('request');
+			tts = encodeURI(tts);
+			console.log('http://www.voxygen.fr/sites/all/modules/voxygen_voices/assets/proxy/index.php?method=redirect&text='+tts+'&voice='+typeOfVoice+'&ts=14030902642');
+			request('http://www.voxygen.fr/sites/all/modules/voxygen_voices/assets/proxy/index.php?method=redirect&text='+tts+'&voice='+typeOfVoice+'&ts=14030902642').pipe(fs.createWriteStream('plugins/sonos/www/temp/voxygen.mp3')).on('finish', function () { callbackfn(); });
+		break;
+	}
+}
+
 
 /**
  * Permet d'envoyer un TTS sur les equipements SONOS
@@ -418,25 +471,7 @@ function GoToPlaylistMode(callbackfn) {
 function callBackToSonos(message, lieu) {
 	console.log('CallBack To Sonos '+lieu+' requested : '+message);
 	// on genere le tts en wav
-	var exec = require('child_process').exec;
-
-	//On récupère le type de voix souhaité
-	//Temp a déplacer dans la page web
-	var NameOfVoice = "Electra";
-	var IsVoxygenVoice = false;
-	if (IsVoxygenVoice) {
-		var urlToUse = "http://www.voxygen.fr/sites/all/modules/voxygen_voices/assets/proxy/index.php?method=redirect&text="+encodeURIComponent(message.replace(/[^a-zA-Z0-9éçè@êàâû€$£ù \.,()!:;'#-_^%*]/g, ""))+"&voice="+NameOfVoice+"&ts=14030902642";
-	}
-	else {
-		var urlToUse = 'http://'+configSarah.http.ip+':'+configSarah.http.port+'/assets/sonos/tempvoice.wav';
-	}
-console.log(urlToUse);
-	child = exec('cd plugins/sonos & ttstowav.vbs "'+message.replace(/[^a-zA-Z0-9éçè@êàâû€$£ù \.,()!:;'#-_^%*]/g, "")+'"',
-	  function (error, stdout, stderr) {
-		if (error !== null) {
-		  console.log('exec error: ' + error);
-		}
-		else {
+	generateFile(message, function() {
 			getTopology(function(){
 				// on récupère le volume actuel
 				getVolume(function(volumeinit) {
@@ -445,7 +480,7 @@ console.log(urlToUse);
 							GetInfosPosition(function(position) {
 								Stop(function () {
 									setVolume(configSonosPerso.volumeAnnonce, function () {
-										RunRadio(urlToUse, function() {
+										RunRadio('http://'+configSarah.http.ip+':'+configSarah.http.port+ (configSarah.bot.version[0] == 3 ? "/assets" : "") + '/sonos/www/temp/'+file, function(tracknumbertemp) {
 											monregex = new RegExp('x-file-cifs://(.*?)');
 											var results = position.trackuri.match(monregex);
 												// C'est un mp3 ou equivalent						
@@ -492,6 +527,7 @@ console.log(urlToUse);
 														});
 													});
 												});
+	
 										});
 									});
 								});
@@ -500,7 +536,7 @@ console.log(urlToUse);
 					});
 				});	
 			});
-		}
+		// }
 	});
 }
 
@@ -508,7 +544,6 @@ console.log(urlToUse);
  * Permet d'envoyer une requete SOAP sur un sonos
  */
 function upnp_sonos(lieu,SonosUrl,SonosAction,SonosService,SonosArgs, callBackUpnp) {
-
 	var SoapRequest =
 		'<?xml version="1.0" encoding="utf-8"?>' +
 		'<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">' +
@@ -518,7 +553,7 @@ function upnp_sonos(lieu,SonosUrl,SonosAction,SonosService,SonosArgs, callBackUp
 				'</u:'+SonosAction+'>'+
 			'</s:Body>' +
 		'</s:Envelope>';
-
+				
 	request({ 
 		'uri'     : 'http://'+lieu+':1400'+SonosUrl,
 		'method'  : 'post',
@@ -528,7 +563,6 @@ function upnp_sonos(lieu,SonosUrl,SonosAction,SonosService,SonosArgs, callBackUp
 		},
 		'body' : SoapRequest
 		}, function (err, response, body){
-		
 			if (err || response.statusCode != 200) {
 				
 				if (body != undefined) {
@@ -546,6 +580,7 @@ function upnp_sonos(lieu,SonosUrl,SonosAction,SonosService,SonosArgs, callBackUp
 					}
 				}
 			}
+			
 			
 			if (callBackUpnp) {
 					callBackUpnp(body);
@@ -769,6 +804,9 @@ module.exports.getTopology = getTopology;
 module.exports.GetInfosPosition = GetInfosPosition;
 module.exports.GetTransportStatus = GetTransportStatus;
 module.exports.GetTransportInfos = GetTransportInfos;
+module.exports.AddURIToQueue = AddURIToQueue;
+module.exports.RemoveAllTracksFromQueue = RemoveAllTracksFromQueue;
+module.exports.Seek = Seek;
 module.exports.volDown = volDown;
 module.exports.volUp = volUp;
 module.exports.Search = Search;
