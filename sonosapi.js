@@ -426,7 +426,6 @@ function GoToPlaylistMode(callbackfn) {
 	});
 }
 
-<<<<<<< HEAD
 var file;
 /**
  * Permet de génerer le fichier audio à jouer
@@ -434,20 +433,12 @@ var file;
  * @param callback
  */
 function generateFile(tts, callbackfn) {
-=======
-/**
- * Récupère le type d'URL qui sera donné à SARAH, sert à modifier la voix
- * @param message
- */
-function getUrl(message) {
->>>>>>> origin/dev
 	//On récupère dans la conf le type de voix souhaité
 	var typeOfVoice = configSonosPerso.typeOfVoice;
 	var urlToUse;
 	switch(typeOfVoice)
 	{
 		case "Std_SARAH" : 
-<<<<<<< HEAD
 		case null :
 			file = 'voice.wav';
 			var exec = require('child_process').exec;
@@ -471,19 +462,6 @@ function getUrl(message) {
 	}
 }
 
-=======
-			urlToUse = 'http://'+configSarah.http.ip+':'+configSarah.http.port+'/assets/sonos/tempvoice.wav';
-		break;
-		case null :
-			urlToUse = 'http://'+configSarah.http.ip+':'+configSarah.http.port+'/assets/sonos/tempvoice.wav';
-		break;
-		default :
-			urlToUse = "http://www.voxygen.fr/sites/all/modules/voxygen_voices/assets/proxy/index.php?method=redirect&text="+encodeURIComponent(message.replace(/[^a-zA-Z0-9éçè@êàâû€$£ù \.,()!:;'#-_^%*]/g, ""))+"&voice="+typeOfVoice+"&ts=14030902642";
-		break;
-	}
-	return urlToUse;
-}
->>>>>>> origin/dev
 
 /**
  * Permet d'envoyer un TTS sur les equipements SONOS
@@ -493,21 +471,7 @@ function getUrl(message) {
 function callBackToSonos(message, lieu) {
 	console.log('CallBack To Sonos '+lieu+' requested : '+message);
 	// on genere le tts en wav
-<<<<<<< HEAD
 	generateFile(message, function() {
-=======
-	var exec = require('child_process').exec;
-
-	var urlToUse = getUrl(message);
-	console.log(urlToUse);
-	
-	child = exec('cd plugins/sonos & ttstowav.vbs "'+message.replace(/[^a-zA-Z0-9éçè@êàâû€$£ù \.,()!:;'#-_^%*]/g, "")+'"',
-	  function (error, stdout, stderr) {
-		if (error !== null) {
-		  console.log('exec error: ' + error);
-		}
-		else {
->>>>>>> origin/dev
 			getTopology(function(){
 				// on récupère le volume actuel
 				getVolume(function(volumeinit) {
@@ -786,7 +750,7 @@ function Search() {
 		    			});
 		    			if (insert) {
 		    				devices.push(device);
-
+		    				
 		    				content = JSON.stringify(devices);
 		    				
 			    			saveFile('sonos', 'devices.tmp', content);
