@@ -442,7 +442,7 @@ function generateFile(tts, callbackfn) {
 		case null :
 			file = 'voice.wav';
 			var exec = require('child_process').exec;
-			child = exec('cd plugins/sonos & ttstowav.vbs "'+tts.replace(/[^a-zA-Z0-9éçè@êàâû€$£ù \.,()!:;'#-_^%*]/g, "")+'"',
+			child = exec('cd plugins/sonos/www/js & ttstowav.vbs "'+tts.replace(/[^a-zA-Z0-9éçè@êàâû€$£ù \.,()!:;'#-_^%*]/g, "")+'"',
 				function (error, stdout, stderr) {
 				if (error !== null) {
 				  console.log('exec error: ' + error);
@@ -457,7 +457,7 @@ function generateFile(tts, callbackfn) {
 			request = require('request');
 			tts = encodeURI(tts);
 			console.log('http://www.voxygen.fr/sites/all/modules/voxygen_voices/assets/proxy/index.php?method=redirect&text='+tts+'&voice='+typeOfVoice+'&ts=14030902642');
-			request('http://www.voxygen.fr/sites/all/modules/voxygen_voices/assets/proxy/index.php?method=redirect&text='+tts+'&voice='+typeOfVoice+'&ts=14030902642').pipe(fs.createWriteStream('plugins/sonos/www/temp/voxygen.mp3')).on('finish', function () { callbackfn(); });
+			request('http://www.voxygen.fr/sites/all/modules/voxygen_voices/assets/proxy/index.php?method=redirect&text='+tts+'&voice='+typeOfVoice+'&ts=14030902642').pipe(fs.createWriteStream('plugins/sonos/data/voxygen.mp3')).on('finish', function () { callbackfn(); });
 		break;
 	}
 }
@@ -480,7 +480,7 @@ function callBackToSonos(message, lieu) {
 							GetInfosPosition(function(position) {
 								Stop(function () {
 									setVolume(configSonosPerso.volumeAnnonce, function () {
-										RunRadio('http://'+configSarah.http.ip+':'+configSarah.http.port+ (configSarah.bot.version[0] == 3 ? "/assets" : "") + '/sonos/www/temp/'+file, function(tracknumbertemp) {
+										RunRadio('http://'+configSarah.http.ip+':'+configSarah.http.port+ (configSarah.bot.version[0] == 3 ? "/assets" : "") + '/sonos/data/'+file, function(tracknumbertemp) {
 											monregex = new RegExp('x-file-cifs://(.*?)');
 											var results = position.trackuri.match(monregex);
 												// C'est un mp3 ou equivalent						

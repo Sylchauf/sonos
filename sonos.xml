@@ -1,4 +1,4 @@
-<grammar version="1.0" xml:lang="fr-FR" mode="voice" root="ruleSonos" xmlns="http://www.w3.org/2001/06/grammar" tag-format="semantics/1.0">
+﻿<grammar version="1.0" xml:lang="fr-FR" mode="voice" root="ruleSonos" xmlns="http://www.w3.org/2001/06/grammar" tag-format="semantics/1.0">
   <rule id="ruleSonos" scope="public">
     <example>Sarah allume la musique dans le salon</example>
     <tag>out.action=new Object(); </tag>

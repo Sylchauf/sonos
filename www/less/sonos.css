@@ -1,0 +1,27 @@
+#sonos .portlet-header {
+  display: none;
+}
+#sonos .portlet-footer {
+  position: absolute;
+  bottom: 0;
+  background: transparent;
+}
+#sonos .portlet-body {
+  height: 100%;
+  padding: 0;
+}
+#sonos .logo {
+  background: #33A3EC;
+  padding: 10px;
+  width: 40%;
+  height: 100%;
+  line-height: 100%;
+  float: left;
+  text-align: center;
+}
+#sonos .text {
+  width: 60%;
+  height: 100%;
+  float: left;
+  text-align: center;
+}

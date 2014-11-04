@@ -1,0 +1,101 @@
+﻿<grammar version="1.0" xml:lang="en-US" mode="voice"  root="ruleSonos" xmlns="http://www.w3.org/2001/06/grammar" tag-format="semantics/1.0">
+  <rule id="ruleSonos" scope="public">
+    <example>Sarah turns on the music in the living room</example>
+    <tag>out.action=new Object(); </tag>
+    <item>Sarah</item>
+     
+    <one-of>
+		<!-- Lance la musique/radio -->
+		<item weight="1.5">
+			<one-of>
+				<item>turn on</item>
+				<item>start</item>
+			</one-of> 
+			<one-of>
+				<item>the music<tag>out.action.actionSonos="play"</tag></item>
+				<item>the radio<tag>out.action.actionSonos="playradio"</tag></item>
+				<item>the speaker detection<tag>out.action.actionSonos="lookForSonos"</tag></item>
+			</one-of>
+		</item>
+		
+		<!-- Arrète la musique/radio -->
+		<item weight="1.5">stop the<tag>out.action.actionSonos="pause"</tag>
+			<one-of>
+				<item>music</item>
+				<item>radio</item>
+			</one-of>
+		</item>
+		
+		<!-- Changement de musique -->
+		<item weight="1.5">
+			<one-of>
+				<item>go to the next<tag>out.action.actionSonos="next"</tag></item>
+				<item>go to the previous<tag>out.action.actionSonos="previous"</tag></item>
+			</one-of>
+		</item>
+		
+		<!-- Augmentation du volume par palier de 10 -->
+		<item weight="1.5">up<tag>out.action.actionSonos="volup"</tag>
+			<one-of>
+				<item>the volume</item>
+				<item>the sound</item>
+			</one-of>
+		</item>
+		
+		<!-- Baisse du volume par palier de 10 -->
+		<item weight="1.5">down<tag>out.action.actionSonos="voldown"</tag>
+			<one-of>
+				<item>the volume</item>
+				<item>the sound</item>
+			</one-of>
+		</item>
+		
+		<!-- Réglage précise -->
+		<item weight="1.5">adjusts the volume at 
+			<one-of>
+				<item>ten<tag>out.action.actionSonos="volswitch";out.action.value="10"</tag></item>
+				<item>twenty<tag>out.action.actionSonos="volswitch";out.action.value="20"</tag></item>
+				<item>thirty<tag>out.action.actionSonos="volswitch";out.action.value="30"</tag></item>
+				<item>forty<tag>out.action.actionSonos="volswitch";out.action.value="40"</tag></item>
+				<item>fifty<tag>out.action.actionSonos="volswitch";out.action.value="50"</tag></item>
+				<item>sixty<tag>out.action.actionSonos="volswitch";out.action.value="60"</tag></item>
+				<item>seventy<tag>out.action.actionSonos="volswitch";out.action.value="70"</tag></item>
+				<item>eighty<tag>out.action.actionSonos="volswitch";out.action.value="80"</tag></item>
+				<item>eighty ten<tag>out.action.actionSonos="volswitch";out.action.value="90"</tag></item>
+				<item>cent<tag>out.action.actionSonos="volswitch";out.action.value="100"</tag></item>
+			</one-of>
+			<item>percent</item>
+		</item>
+		
+		<!-- Synchro de la musique pour les pocesseurs de plusieurs Sonos -->
+		<item>synchronizes the music<tag>out.action.actionSonos="synchronise"</tag>
+			<one-of>
+				<!-- ##DEBUT_AJOUT_PIECE_SYNCHRO## -->
+				<item>to the Kitchen<tag>out.action.syncFrom=Cuisine</tag></item>
+				<item>from the Kitchen<tag>out.action.syncTo=Cuisine</tag></item>
+				<item>to the living room<tag>out.action.syncFrom=Salon</tag></item>
+				<item>from the living room<tag>out.action.syncTo=Salon</tag></item>
+				<!-- ##FIN_AJOUT_PIECE_SYNCHRO## -->
+			</one-of>
+		</item>
+    </one-of>
+		
+	<!-- Choix de la pièce -->
+	<item repeat="0-1">
+		<item>in the</item>
+		<one-of>
+			<!-- ##DEBUT_CHOIX_DE_LA_PIECE## -->
+			<item>Kitchen<tag>out.action.idPiece='SARAH1';out.action.idSonos='49cf955f-0693-6c59-be8e-b4033f4406f5'</tag></item>
+			<item>living room<tag>out.action.idPiece='SARAH1';out.action.idSonos='a77905c9-1edb-6f98-7932-e90f9979f6d4'</tag></item>
+			<!-- ##FIN_CHOIX_DE_LA_PIECE## -->
+		</one-of>
+	</item>
+	
+	<!--<one-of repeat="0-1">
+		<item>sur play5<tag>out.action.idSonos='4b8a26fc-be8c-11ea-e4cb-02e9f914ed63'</tag></item>
+    </one-of>-->
+    
+    <tag>out.action._attributes.uri="http://127.0.0.1:8080/sarah/sonos";</tag>
+  </rule>
+</grammar>
+              

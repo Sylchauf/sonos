@@ -19,7 +19,7 @@
 	// Chargement des modules nécessaire
 	xml2js = require('xml2js');
 	request = require('request');
-	SonosAPI = require('./sonosapi.js');
+	SonosAPI = require('./www/js/sonosapi.js');
 	
 	// Detection de la pièce / client Sarah
 	if (data.idPiece == undefined || data.idPiece == '') {
@@ -298,7 +298,7 @@
 
 exports.init = function(SARAH){
 	fs = require('fs');
-	SonosAPI = require('./sonosapi.js');
+	SonosAPI = require('./www/js/sonosapi.js');
 	request = require('request');
 	xml2js = require('xml2js');
 	
