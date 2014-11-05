@@ -6,7 +6,7 @@ Set oArgs=WScript.Arguments ' tableau d'arguments
 strText=Trim(oArgs(0))
 If NOT len(strText)>0 Then WScript.Quit
 With CreateObject("Scripting.FileSystemObject")
- strFile=.BuildPath(.GetParentFolderName(WScript.ScriptFullName),"../../data/voice.wav")
+ strFile=.BuildPath(.GetParentFolderName(WScript.ScriptFullName),"../data/voice.wav")
  If .FileExists(strFile) Then .DeleteFile strFile
 End With
 With CreateObject("Sapi.SpVoice")

@@ -457,7 +457,7 @@ function generateFile(tts, callbackfn) {
 			request = require('request');
 			tts = encodeURI(tts);
 			console.log('http://www.voxygen.fr/sites/all/modules/voxygen_voices/assets/proxy/index.php?method=redirect&text='+tts+'&voice='+typeOfVoice+'&ts=14030902642');
-			request('http://www.voxygen.fr/sites/all/modules/voxygen_voices/assets/proxy/index.php?method=redirect&text='+tts+'&voice='+typeOfVoice+'&ts=14030902642').pipe(fs.createWriteStream('plugins/sonos/data/voxygen.mp3')).on('finish', function () { callbackfn(); });
+			request('http://www.voxygen.fr/sites/all/modules/voxygen_voices/assets/proxy/index.php?method=redirect&text='+tts+'&voice='+typeOfVoice+'&ts=14030902642').pipe(fs.createWriteStream('plugins/sonos/www/data/voxygen.mp3')).on('finish', function () { callbackfn(); });
 		break;
 	}
 }
@@ -480,7 +480,7 @@ function callBackToSonos(message, lieu) {
 							GetInfosPosition(function(position) {
 								Stop(function () {
 									setVolume(configSonosPerso.volumeAnnonce, function () {
-										RunRadio('http://'+configSarah.http.ip+':'+configSarah.http.port+ (configSarah.bot.version[0] == 3 ? "/assets" : "") + '/sonos/data/'+file, function(tracknumbertemp) {
+										RunRadio('http://'+configSarah.http.ip+':'+configSarah.http.port+ (configSarah.bot.version[0] == 3 ? "/assets" : "") + '/sonos/www/data/'+file, function(tracknumbertemp) {
 											monregex = new RegExp('x-file-cifs://(.*?)');
 											var results = position.trackuri.match(monregex);
 												// C'est un mp3 ou equivalent						
