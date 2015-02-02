@@ -13,7 +13,7 @@
 	"plugin.sonos.client"				: "Client&nbsp;Sarah",
 	"plugin.sonos.name"					: "Nom",
 	"plugin.sonos.reload"				: "Recharger la configuration",
-	"plugin.sonos.vocalisation"			: "Vocalisation",
+	"plugin.sonos.vocalisation"			: "Enceinte qui vocalise",
 	"plugin.sonos.addSonos"				: "Ajouter un équipement",
 	"plugin.sonos.titleConfig"			: "Configuration des équipements SONOS",
 	"plugin.sonos.descConfig"			: "Les noms des clients doivent être strictement identique au nom du client SARAH. Vous trouverez ce nom dans le fichier custom.ini (client=)",
@@ -27,8 +27,8 @@
 	"plugin.sonos.descRadio"			: "Permet de définir la radio par défaut que Sarah peut lancer.",
 	"plugin.sonos.suppRadio"			: "Google Musique (j'ai de la chance)",
 	"plugin.sonos.titleExportVoice"		: "Exporter les voix",
-	"plugin.sonos.suppExportVoice1"		: "Non : Sarah ne parle qu'à travers vos enceintes habituelles",
-	"plugin.sonos.suppExportVoice2"		: "Oui : Sarah ne parlera qu'à travers le système SONOS, même pour les autres plugins. Ce paramétrage active le multiroom.",
+	"plugin.sonos.suppExportVoice1"		: "Non : Sarah ne parle qu'à travers vos enceintes habituelles (fonctionnement traditionel de SARAH)",
+	"plugin.sonos.suppExportVoice2"		: "Oui : Sarah ne parlera qu'à travers le système SONOS, même pour les autres plugins (le plugin sonos gère l'ensemble des retours vocaux de SARAH). Ce paramétrage active également le multiroom.",
 	"plugin.sonos.titreSilenceHour"		: "Heure de silence",
 	"plugin.sonos.between"				: "Entre",
 	"plugin.sonos.and"					: "et",
@@ -38,5 +38,10 @@
 	"plugin.sonos.exConfirmAction"		: "Exemple : Sarah éteind la musique => 'La musique est éteinte' ou 'silence'",
 	"plugin.sonos.valid"				: "Valider",
 	
-	"plugin.sonos.erreur"				: "Erreurs"
+	"plugin.sonos.erreur"				: "Erreurs",
+	
+	"plugin.sonos.titleTypeExport"		: "Type d'export",
+	"plugin.sonos.suppTypeExport1"		: "Une seule enceinte : Sarah vocalise tous les TTS sur une seule enceinte au choix peu importe le client SARAH",
+	"plugin.sonos.suppTypeExport2"		: "Toutes les enceintes : Sarah vocalise tous les TTS sur toutes les enceintes SONOS configurées",
+	"plugin.sonos.suppTypeExport3"		: "Multiroom : Sarah vocalise sur une seule enceinte en fonction du client"
 }

@@ -6,7 +6,6 @@ var devices = new Array();
  * @param callBackfn
  */
 function RunRadio(radio, callbackfn) {
-	console.log("Url audio : " + radio);
 	var url = '/MediaRenderer/AVTransport/Control';
 	var action = 'SetAVTransportURI';
 	var service = 'urn:schemas-upnp-org:service:AVTransport:1';
@@ -305,7 +304,6 @@ function Synchronise(source, cible, callbackfn) {
 	for (var idSonos in configSonosPerso.equipements[cible]) {
 		if (configSonosPerso.equipements[cible][idSonos].name == source) {
 			id = idSonos;
-			console.log(id);
 			break;
 		}
 	}
@@ -453,11 +451,11 @@ function generateFile(tts, callbackfn) {
 			});
 		break;
 		default :
-			file = 'voxygen.mp3';
+			file = 'voxygen'+lieu+'.mp3';
 			request = require('request');
 			tts = encodeURI(tts);
-			console.log('http://www.voxygen.fr/sites/all/modules/voxygen_voices/assets/proxy/index.php?method=redirect&text='+tts+'&voice='+typeOfVoice+'&ts=14030902642');
-			request('http://www.voxygen.fr/sites/all/modules/voxygen_voices/assets/proxy/index.php?method=redirect&text='+tts+'&voice='+typeOfVoice+'&ts=14030902642').pipe(fs.createWriteStream('plugins/sonos/www/data/voxygen.mp3')).on('finish', function () { callbackfn(); });
+
+			request('http://www.voxygen.fr/sites/all/modules/voxygen_voices/assets/proxy/index.php?method=redirect&text='+tts+'&voice='+typeOfVoice+'&ts=14030902642').pipe(fs.createWriteStream('plugins/sonos/www/data/voxygen'+lieu+'.mp3')).on('finish', function () { callbackfn(); });
 		break;
 	}
 }
@@ -553,7 +551,6 @@ function upnp_sonos(lieu,SonosUrl,SonosAction,SonosService,SonosArgs, callBackUp
 				'</u:'+SonosAction+'>'+
 			'</s:Body>' +
 		'</s:Envelope>';
-				
 	request({ 
 		'uri'     : 'http://'+lieu+':1400'+SonosUrl,
 		'method'  : 'post',
@@ -791,22 +788,3 @@ function saveFile(name, file, content) {
 	}
 }
 
-module.exports.RunRadio = RunRadio;
-module.exports.Play = Play;
-module.exports.Pause = Pause;
-module.exports.Next = Next;
-module.exports.Prev = Prev;
-module.exports.Synchronise = Synchronise;
-module.exports.getVolume = getVolume;
-module.exports.setVolume = setVolume;
-module.exports.callBackToSonos = callBackToSonos;
-module.exports.getTopology = getTopology;
-module.exports.GetInfosPosition = GetInfosPosition;
-module.exports.GetTransportStatus = GetTransportStatus;
-module.exports.GetTransportInfos = GetTransportInfos;
-module.exports.AddURIToQueue = AddURIToQueue;
-module.exports.RemoveAllTracksFromQueue = RemoveAllTracksFromQueue;
-module.exports.Seek = Seek;
-module.exports.volDown = volDown;
-module.exports.volUp = volUp;
-module.exports.Search = Search;

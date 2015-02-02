@@ -19,33 +19,33 @@
 	// Chargement des modules nécessaire
 	xml2js = require('xml2js');
 	request = require('request');
-	SonosAPI = require('./www/js/sonosapi.js');
-	
+	eval(fs.readFileSync(__dirname + '/www/js/sonosapi.js')+'');
+
 	// Detection de la pièce / client Sarah
-	if (data.idPiece == undefined || data.idPiece == '') {
+	if ((data.idPiece == undefined || data.idPiece == '') && data.actionSonos != 'saveConfig') {
 		data.idPiece = data.client;
 		if (data.idPiece == undefined || data.idPiece == "") {
 			console.log('Fatal Error: Sarah\'s client is undefined');
 		}
 	}
-	console.log("data.idPiece => " + data.idPiece);
 	
 	if (data.actionSonos == "lookForSonos") {
-			SonosAPI.Search();
+			Search();
 	}
 	
 	// Detection de l'enceinte sur laquelle vocaliser
 	else if (data.actionSonos != 'saveConfig' && (data.idSonos == '' || data.idSonos == undefined)) {
 		for (var idSonos in configSonosPerso.equipements[data.idPiece]) {
-			if (configSonosPerso.equipements[data.idPiece][idSonos].vocalisation == 1)
+			if (configSonosPerso.equipements[data.idPiece][idSonos].vocalisation == 1) {
 				data.idSonos = idSonos;
+			}
 		}
 		
 		//Si le client actuel n'a pas d'enceinte on parle sur la 1ère enceinte dispo
 		if (data.idSonos == undefined) {
 			for (var piece in configSonosPerso.equipements) {
 				for (var sonos in configSonosPerso.equipements[piece]) {
-					if (configSonosPerso.equipements[piece][sonos].vocalisation == 1 || configSonos.exportAllVoice == 0) {
+					if (configSonosPerso.equipements[piece][sonos].vocalisation == 1 || configSonos.exportAllVoice == 0 || configSonosPerso.equipements[piece][sonos].ip == data.forceEnceinte.ip) {
 						data.idPiece = piece;
 						data.idSonos = sonos;
 						break;
@@ -57,17 +57,18 @@
 		}
 	}
 
+
 	if (data.idPiece != null && data.idSonos != null) {
-		lieu = configSonosPerso.equipements[data.idPiece][data.idSonos].ip;
-		mac = configSonosPerso.equipements[data.idPiece][data.idSonos].mac;
+		var lieu = configSonosPerso.equipements[data.idPiece][data.idSonos].ip;
+		var mac = configSonosPerso.equipements[data.idPiece][data.idSonos].mac;
 	}
 
 	// Actions
 	if (data.actionSonos == "play" || data.actionSonos == "playradio")	{		
-		SonosAPI.GetInfosPosition(function(infos) {
+		GetInfosPosition(function(infos) {
 			if(data.actionSonos == "playradio") {
-				SonosAPI.RunRadio(configSonosPerso.defaultRadio, function() {
-				   SonosAPI.Play(callback(configSonosPerso.confirmActions == 1 ? {'tts': 'Je lance la radio.'} : {}));
+				RunRadio(configSonosPerso.defaultRadio, function() {
+				   Play(callback(configSonosPerso.confirmActions == 1 ? {'tts': 'Je lance la radio.'} : {}));
 				});
 		    }
 			else if (infos.tracknumber == "0") {
@@ -76,8 +77,8 @@
 				  "Non" : 'non'
 				}, 15000, function(answer, end) {
 					if (answer == 'oui') {
-						SonosAPI.RunRadio(configSonosPerso.defaultRadio, function() {
-							SonosAPI.Play(end());
+						RunRadio(configSonosPerso.defaultRadio, function() {
+							Play(end());
 						});
 					}
 					else {
@@ -88,29 +89,29 @@
 				callback();
 			}
 			else {
-				SonosAPI.Play(callback(configSonosPerso.confirmActions == 1 ? {'tts': 'Je lance la musique.'} : {}));
+				Play(callback(configSonosPerso.confirmActions == 1 ? {'tts': 'Je lance la musique.'} : {}));
 			}
 		});	
 	}
 	  
 	else if (data.actionSonos == "pause") {
-		SonosAPI.Pause(callback(configSonosPerso.confirmActions == 1 ? {'tts': 'J\'arrête la musique.'} : {}));
+		Pause(callback(configSonosPerso.confirmActions == 1 ? {'tts': 'J\'arrête la musique.'} : {}));
 	}
 
 	else if (data.actionSonos == "next") {
-		SonosAPI.Next(callback(configSonosPerso.confirmActions == 1 ? {'tts': 'Je lance la musique suivante.'} : {}));
+		Next(callback(configSonosPerso.confirmActions == 1 ? {'tts': 'Je lance la musique suivante.'} : {}));
 	}
 
 	else if (data.actionSonos == "previous") {
-		SonosAPI.Prev(callback(configSonosPerso.confirmActions == 1 ? {'tts': 'Je lance la musique précedente.'} : {}));
+		Prev(callback(configSonosPerso.confirmActions == 1 ? {'tts': 'Je lance la musique précedente.'} : {}));
 	}
 	
 	else if (data.actionSonos == "volup") {
-		SonosAPI.volUp(callback(configSonosPerso.confirmActions == 1 ? {'tts': 'Je monte le son.'} : {}));
+		volUp(callback(configSonosPerso.confirmActions == 1 ? {'tts': 'Je monte le son.'} : {}));
 	}
 	
 	else if (data.actionSonos == "voldown")	{
-		SonosAPI.volDown(callback(configSonosPerso.confirmActions == 1 ? {'tts': 'Je baisse le son.'} : {}));
+		volDown(callback(configSonosPerso.confirmActions == 1 ? {'tts': 'Je baisse le son.'} : {}));
 	}
 	
 	else if (data.actionSonos == "volswitch") {
@@ -118,7 +119,7 @@
 		    callback({'tts': "Le volume est indéfini !"});
 		}
 		else {
-			SonosAPI.setVolume(data.value, callback(configSonosPerso.confirmActions == 1 ? {'tts': 'J\'ai réglé le volume à '+data.value+' %.'} : {}));
+			setVolume(data.value, callback(configSonosPerso.confirmActions == 1 ? {'tts': 'J\'ai réglé le volume à '+data.value+' %.'} : {}));
 		}
     }
 	
@@ -127,16 +128,16 @@
 		// A ton une destination ?
 		if (data.syncTo != undefined) {
 			// Oui, donc on synchronique de la pièce en cours (client) vers la piece demandée (to)
-			SonosAPI.Synchronise(data.idPiece, data.syncTo, function () {
-				SonosAPI.Play(function(){
+			Synchronise(data.idPiece, data.syncTo, function () {
+				Play(function(){
 					callback(configSonosPerso.confirmActions == 1 ? {'tts': 'J\ai éffectué la synchronisation.'} : {});
 				});	
 			});
 		}
 		else {
 			// Non, donc je synchronise la piece demandée (from) vers la piece en cours (client)
-			SonosAPI.Synchronise(data.syncFrom, data.idPiece, function () {
-				SonosAPI.Play(function(){
+			Synchronise(data.syncFrom, data.idPiece, function () {
+				Play(function(){
 					callback(configSonosPerso.confirmActions == 1 ? {'tts': 'J\ai éffectué la synchronisation.'} : {});
 				});			
 			});
@@ -163,7 +164,8 @@
 			dMidnight.setHours(0);
 			dMidnight.setMinutes(0);
 			dMidnight.setSeconds(0);
-			//console.log("----- DEBUG ----\nMinuit : "+dMidnight + "\nStart : "+dStartTime + "\nActual : "+dActualTime + "\nEnd : "+dEndTime + "\n----- DEBUG ----");
+			dMidnight.setSeconds(0);
+			
 			//Si la date de fin est inférieur à la date de départ...
 			if (dEndTime < dStartTime) {
 				if ( dActualTime > dMidnight && dActualTime < dEndTime ) {
@@ -174,20 +176,16 @@
 				}
 			}
 			//else if (dActualTime < dStartTime && dEndTime > dActualTime)
-			//	dStartTime.setDate(dActualTime.getDate()-1);
-			//console.log("----- DEBUG ----\nMinuit : "+dMidnight + "\nStart : "+dStartTime + "\nActual : "+dActualTime + "\nEnd : "+dEndTime + "\n----- DEBUG ----");
 			if (dActualTime > dStartTime && dActualTime < dEndTime) {
 				console.log("Heure de Silence: "+data.tts);
 				callback();
 			}
 			else {
-				SonosAPI.callBackToSonos(data.tts, lieu);
-				callback();
+				callBackToSonos(data.tts, lieu, callback());
 			}
 		}
 		else {
-			SonosAPI.callBackToSonos(data.tts, lieu);
-			callback();
+			callBackToSonos(data.tts, lieu, callback());
 		}
 	}
 	
@@ -207,11 +205,11 @@
 		    .then(function(data2) {	
 				artistID = data2.artists.items[0].id;
 	
-				SonosAPI.RemoveAllTracksFromQueue(function() {
+				RemoveAllTracksFromQueue(function() {
 					METADATA = '&lt;DIDL-Lite xmlns:dc=&quot;http://purl.org/dc/elements/1.1/&quot; xmlns:upnp=&quot;urn:schemas-upnp-org:metadata-1-0/upnp/&quot; xmlns:r=&quot;urn:schemas-rinconnetworks-com:metadata-1-0/&quot; xmlns=&quot;urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/&quot;&gt;&lt;item id=&quot;0008006ctophits%3aspotify%3aartist%3a'+artistID+'&quot; parentID=&quot;00050064spotify%3aartist%3a'+artistID+'&quot; restricted=&quot;true&quot;&gt;&lt;dc:title&gt;Pistes Populaires&lt;/dc:title&gt;&lt;upnp:class&gt;object.container&lt;/upnp:class&gt;&lt;desc id=&quot;cdudn&quot; nameSpace=&quot;urn:schemas-rinconnetworks-com:metadata-1-0/&quot;&gt;SA_RINCON2311_X_#Svc2311-0-Token&lt;/desc&gt;&lt;/item&gt;&lt;/DIDL-Lite&gt;';
-					SonosAPI.AddURIToQueue('x-rincon-cpcontainer:0008006ctophits%3aspotify%3aartist%3a'+artistID, METADATA, function () {
-						SonosAPI.Seek('TRACK_NR', 1, function() {
-							SonosAPI.Play(function(){
+					AddURIToQueue('x-rincon-cpcontainer:0008006ctophits%3aspotify%3aartist%3a'+artistID, METADATA, function () {
+						Seek('TRACK_NR', 1, function() {
+							Play(function(){
 								callback(configSonosPerso.confirmActions == 1 ? {'tts': 'Je lance l\'artiste '+data.dictation} : {});
 							});			
 						});
@@ -224,28 +222,6 @@
 		else {
 			callback({'tts': 'Je n\'ai pas compris votre requete.'});
 		}
-	}
-	
-	else if (data.actionSonos == 'test2') {
-
-// Or with cookies
-// var request = require('request').defaults({jar: true});
-
-	/*request({ 'uri': 'http://www.voxygen.fr/sites/all/modules/voxygen_voices/assets/proxy/index.php?method=redirect&text=TEST&voice=Eva&ts=14030902642'}, function (err, response, body){
-			console.log(response);
-			//console.log(body);
-			//saveFile('sonos', 'test.mp3', response);
-			
-			
-		 });
-		 var http = require('http');
-			var fs = require('fs');
-
-			var file = fs.createWriteStream("testvoix.mp3");
-			var request = http.get("http://ws.voxygen.fr/ws/tts1?text=TEST&voice=Eva&header=headerless&coding=mp3%3A128-0&user=anders.ellersgaard%40mindlab.dk&hmac=74f465f83a81851aff515745a4f118c6", function(response) {
-			  response.pipe(file);
-			});
-		 callback();*/
 	}
 	
 	else if (data.actionSonos == "saveConfig") {
@@ -293,12 +269,13 @@
 		var xml = xml.replace(regexp, replace);
 		fs.writeFileSync(fileXML, xml, 'utf8');
 	}
+	
 	data.idPiece = "";
 };
 
 exports.init = function(SARAH){
 	fs = require('fs');
-	SonosAPI = require('./www/js/sonosapi.js');
+
 	request = require('request');
 	xml2js = require('xml2js');
 	
@@ -308,14 +285,42 @@ exports.init = function(SARAH){
 	if (configSonos.exportAllVoice == 1) {
 		exports.speak = function(tts, async) {
 			if (tts != '') {
-				tts = tts.replace('[name]', '');
-				SARAH.call('sonos',  { 'actionSonos' : 'callBackToSonos' , 'tts' : tts, 'client':SARAH.context.last.options.client});
-				tts = ''; // on annule pour éviter de vocaliser sur les enceintes			
+				
+				if (Profile.beforeEngaged == undefined) {
+					Profile.beforeEngaged =  0;
+				}
+				delta = Profile.last.engaged - Profile.beforeEngaged;
+				
+				if (delta > 1500) {
+					tts = tts.replace('[name]', '');
+					
+					if (configSonos.exportType == 1) {
+						forceEnceinte = configSonos.enceinteAlone
+					} else {
+						forceEnceinte = null;
+					}
+					
+					if (configSonos.exportType == 2) {
+						for (var idPiece in configSonos.equipements) {
+							for (var idSonos in configSonos.equipements[idPiece]) {
+								forceEnceinte = configSonos.equipements[idPiece][idSonos];
+
+								SARAH.call('sonos',  { 'actionSonos' : 'callBackToSonos' , 'tts' : tts, 'client':SARAH.context.last.options.client, 'forceEnceinte':forceEnceinte});
+							}
+						}
+					} else {
+						SARAH.call('sonos',  { 'actionSonos' : 'callBackToSonos' , 'tts' : tts, 'client':SARAH.context.last.options.client, 'forceEnceinte':forceEnceinte});
+					}
+					
+					Profile.beforeEngaged = Profile.last.engaged;					
+				}	
+				tts = ''; // on annule pour éviter de vocaliser sur les enceintes					
 			}
 			return tts;
 			
 		};
 	 }
 	
-	SonosAPI.Search();
+	eval(fs.readFileSync(__dirname + '/www/js/sonosapi.js')+'');
+	Search();
  };

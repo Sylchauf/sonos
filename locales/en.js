@@ -28,7 +28,7 @@
 	"plugin.sonos.suppRadio"			: "Google Music (I'm lucky)",
 	"plugin.sonos.titleExportVoice"		: "Export voice",
 	"plugin.sonos.suppExportVoice1"		: "No, Sarah speaks only through your usual speakers",
-	"plugin.sonos.suppExportVoice2"		: "Yes: Sarah will speak only through the SONOS system, even for other plugins. This setting activates the multiroom.",
+	"plugin.sonos.suppExportVoice2"		: "Yes: Sarah will speak only through the SONOS system, even for other plugins. This setting also activates the multiroom.",
 	"plugin.sonos.titreSilenceHour"		: "Time of silence",
 	"plugin.sonos.between"				: "between",
 	"plugin.sonos.and"					: "and",
@@ -38,5 +38,10 @@
 	"plugin.sonos.exConfirmAction"		: "Example: Sarah extinguishes music => 'The music is off' or 'silence'",
 	"plugin.sonos.valid"				: "validate",
 
-	"plugin.sonos.erreur"				: "errors"
+	"plugin.sonos.erreur"				: "errors",
+	
+	"plugin.sonos.titleTypeExport"		: "Type d'export",
+	"plugin.sonos.suppTypeExport1"		: "Une seule enceinte : Sarah vocalise tous les TTS sur une seule enceinte au choix peu importe le client SARAH",
+	"plugin.sonos.suppTypeExport2"		: "Toutes les enceintes : Sarah vocalise tous les TTS sur toutes les enceintes SONOS configurées",
+	"plugin.sonos.suppTypeExport3"		: "Multiroom : Sarah vocalise sur une seule enceinte en fonction du client"
 }
