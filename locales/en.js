@@ -40,8 +40,8 @@
 
 	"plugin.sonos.erreur"				: "errors",
 	
-	"plugin.sonos.titleTypeExport"		: "Type d'export",
-	"plugin.sonos.suppTypeExport1"		: "Une seule enceinte : Sarah vocalise tous les TTS sur une seule enceinte au choix peu importe le client SARAH",
-	"plugin.sonos.suppTypeExport2"		: "Toutes les enceintes : Sarah vocalise tous les TTS sur toutes les enceintes SONOS configurées",
-	"plugin.sonos.suppTypeExport3"		: "Multiroom : Sarah vocalise sur une seule enceinte en fonction du client"
+	"plugin.sonos.titleTypeExport"		: "Export Type",
+	"plugin.sonos.suppTypeExport1"		: "Single speaker : Sarah send all TTS on a single speaker whatever SARAH client",
+	"plugin.sonos.suppTypeExport2"		: "All speaker : Sarah send all TTS on all SONOS speaker setup",
+	"plugin.sonos.suppTypeExport3"		: "Multiroom : Sarah send the TTS on the good speaker depending of the room"
 }
