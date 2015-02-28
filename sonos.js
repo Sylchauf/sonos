@@ -45,6 +45,11 @@
 		if (data.idSonos == undefined) {
 			for (var piece in configSonosPerso.equipements) {
 				for (var sonos in configSonosPerso.equipements[piece]) {
+					if (data.forceEnceinte == undefined) {
+						data.forceEnceinte = {};
+						data.forceEnceinte.ip = '';
+					}
+					
 					if (configSonosPerso.equipements[piece][sonos].vocalisation == 1 || configSonos.exportAllVoice == 0 || configSonosPerso.equipements[piece][sonos].ip == data.forceEnceinte.ip) {
 						data.idPiece = piece;
 						data.idSonos = sonos;
@@ -305,11 +310,11 @@ exports.init = function(SARAH){
 							for (var idSonos in configSonos.equipements[idPiece]) {
 								forceEnceinte = configSonos.equipements[idPiece][idSonos];
 
-								SARAH.call('sonos',  { 'actionSonos' : 'callBackToSonos' , 'tts' : tts, 'client':SARAH.context.last.options.client, 'forceEnceinte':forceEnceinte});
+								SARAH.run('sonos',  { 'actionSonos' : 'callBackToSonos' , 'tts' : tts, 'client':SARAH.ScriptManager.lastCmd.client, 'forceEnceinte':forceEnceinte});
 							}
 						}
 					} else {
-						SARAH.call('sonos',  { 'actionSonos' : 'callBackToSonos' , 'tts' : tts, 'client':SARAH.context.last.options.client, 'forceEnceinte':forceEnceinte});
+						SARAH.run('sonos',  { 'actionSonos' : 'callBackToSonos' , 'tts' : tts, 'client':SARAH.ScriptManager.lastCmd.client, 'forceEnceinte':forceEnceinte});
 					}
 					
 					Profile.beforeEngaged = Profile.last.engaged;					
