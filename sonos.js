@@ -296,7 +296,7 @@ exports.init = function(SARAH){
 				}
 				delta = Profile.last.engaged - Profile.beforeEngaged;
 				
-				if (delta > 1500) {
+				if (delta > 1500 || isNaN(delta)) {
 					tts = tts.replace('[name]', '');
 					
 					if (configSonos.exportType == 1) {
