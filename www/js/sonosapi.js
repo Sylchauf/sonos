@@ -705,65 +705,69 @@ function volDown(callbackfn) {
 }
 
 function Search() {
-	  var _this = this;
-	  var dgram = require('dgram');
+	var _this = this;
+	var dgram = require('dgram');
 
-	  var PLAYER_SEARCH = new Buffer(['M-SEARCH * HTTP/1.1',
-	  'HOST: 239.255.255.250:reservedSSDPport',
-	  'MAN: ssdp:discover',
-	  'MX: 1',
-	  'ST: urn:schemas-upnp-org:device:ZonePlayer:1'].join('\r\n'));
-	  
-	  devices = []; // on vide
+	var PLAYER_SEARCH = new Buffer(['M-SEARCH * HTTP/1.1',
+	'HOST: 239.255.255.250:reservedSSDPport',
+	'MAN: ssdp:discover',
+	'MX: 1',
+	'ST: urn:schemas-upnp-org:device:ZonePlayer:1'].join('\r\n'));
+
+	devices = []; // on vide
 	   
-	  this.socket = dgram.createSocket('udp4', function(buffer, rinfo) {
-	    buffer = buffer.toString();
-	    if(buffer.match(/.+Sonos.+/)) {
-	    	device = {};
-	    	
-	    	monregex = new RegExp('(http://.*?device_description\.xml)');
-	    	url_device = buffer.match(monregex);
-	    	url_device = url_device[1];
-	    	monregex = new RegExp('http://(.*?):1400');
-	    	device.ip = buffer.match(monregex);
-	    	device.ip = device.ip[1];
+	this.socket = dgram.createSocket('udp4', function(buffer, rinfo) {
+		buffer = buffer.toString();
+		if(buffer.match(/.+Sonos.+/)) {
+			device = {};
 
-	    	request(url_device, function(err, res, body) {
-	    		if (body != '' || body != undefined || body != null) {
-		    		xml2js.parseString(body, function(err, body2) {
-		   			
-		    			device.name = body2.root.device[0].roomName.toString();
-		    			
-		    			monregex = new RegExp('RINCON_(.*?)01400');
-		    			device.mac = body2.root.device[0].UDN.toString().match(monregex);
-		    			device.mac = device.mac[1];
-		    			
-		    			// On boucle sur les enceintes déja connue pour ne pas ajouter la meme enceinte
-		    			var insert = true;
-		    			devices.forEach(function(entry) {
-		    				if (entry.name == device.name) {
-		    					insert = false;
-		    				}
-		    			});
-		    			if (insert) {
-		    				devices.push(device);
-		    				
-		    				content = JSON.stringify(devices);
-		    				
-			    			saveFile('sonos', 'devices.tmp', content);
-		    			}
-		    		});
-	    		}
-	    	});
-	    } 
-	  });
-	  
-	  this.socket.bind(function() {
-	    _this.socket.setBroadcast(true);
-	    _this.socket.send(PLAYER_SEARCH, 0, PLAYER_SEARCH.length, 1900, '239.255.255.250');
-	  });
-	  
-	  return this;
+			monregex = new RegExp('(http://.*?device_description\.xml)');
+			url_device = buffer.match(monregex);
+			url_device = url_device[1];
+			monregex = new RegExp('http://(.*?):1400');
+			device.ip = buffer.match(monregex);
+			device.ip = device.ip[1];
+
+			request(url_device, function(err, res, body) {
+				if (body != '' || body != undefined || body != null) {
+				xml2js.parseString(body, function(err, body2) {
+
+					device.name = body2.root.device[0].roomName.toString();
+
+					monregex = new RegExp('RINCON_(.*?)01400');
+					device.mac = body2.root.device[0].UDN.toString().match(monregex);
+					device.mac = device.mac[1];
+
+					// On boucle sur les enceintes déja connue pour ne pas ajouter la meme enceinte
+					var insert = true;
+					devices.forEach(function(entry) {
+						if (entry.name == device.name) {
+							insert = false;
+						}
+					});
+					if (insert) {
+						devices.push(device);
+
+						content = JSON.stringify(devices);
+
+						saveFile('sonos', 'devices.tmp', content);
+					}
+				});
+				}
+			});
+		} 
+	});
+
+	this.socket.on('error', function(err) {
+		console.log('error : ' + err);
+	});
+
+	this.socket.bind(function() {
+		_this.socket.setBroadcast(true);
+		_this.socket.send(PLAYER_SEARCH, 0, PLAYER_SEARCH.length, 1900, '239.255.255.250');
+	});
+
+	return this;
 }
 
 function toObject(arr) {

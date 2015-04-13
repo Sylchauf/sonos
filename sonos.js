@@ -30,7 +30,8 @@
 	}
 	
 	if (data.actionSonos == "lookForSonos") {
-			Search();
+		Search();
+		callback();
 	}
 	
 	// Detection de l'enceinte sur laquelle vocaliser
