@@ -37,7 +37,7 @@
 	// Detection de l'enceinte sur laquelle vocaliser
 	else if (data.actionSonos != 'saveConfig' && (data.idSonos == '' || data.idSonos == undefined)) {
 		for (var idSonos in configSonosPerso.equipements[data.idPiece]) {
-			if (configSonosPerso.equipements[data.idPiece][idSonos].vocalisation == 1) {
+			if (configSonosPerso.equipements[data.idPiece][idSonos].vocalisation == 1 || configSonos.exportAllVoice == 0) {
 				data.idSonos = idSonos;
 			}
 		}
@@ -62,7 +62,6 @@
 			}
 		}
 	}
-
 
 	if (data.idPiece != null && data.idSonos != null) {
 		var lieu = configSonosPerso.equipements[data.idPiece][data.idSonos].ip;
@@ -235,7 +234,7 @@
 
 		saveFile('sonos', 'configSonosPerso.prop', data);
 		
-		/*generateXml(configSonosPerso);*/
+		generateXml(configSonosPerso);
 		
 		callback();
 

@@ -19,10 +19,16 @@
 		</item>
 		
 		<!-- Arrète la musique/radio -->
-		<item weight="1.5">arrète la<tag>out.action.actionSonos="pause"</tag>
+		<item weight="1.5">
 			<one-of>
-				<item>musique</item>
-				<item>radio</item>
+				<item>arrète</item>
+				<item>éteinds</item>
+				
+			</one-of> 
+			
+			<one-of>
+				<item>la musique<tag>out.action.actionSonos="pause"</tag></item>
+				<item>la radio<tag>out.action.actionSonos="pause"</tag></item>
 			</one-of>
 		</item>
 		
@@ -68,37 +74,20 @@
 		</item>
 		
 		<!-- Synchro de la musique pour les pocesseurs de plusieurs Sonos -->
-		<item>synchronise la musique<tag>out.action.actionSonos="synchronise"</tag>
-			<one-of>
-				<!-- ##DEBUT_AJOUT_PIECE_SYNCHRO## -->
-				<item>vers la Cuisine<tag>out.action.syncFrom=Cuisine</tag></item>
-				<item>depuis la Cuisine<tag>out.action.syncTo=Cuisine</tag></item>
-				<item>vers le Salon<tag>out.action.syncFrom=Salon</tag></item>
-				<item>depuis le Salon<tag>out.action.syncTo=Salon</tag></item>
-				<!-- ##FIN_AJOUT_PIECE_SYNCHRO## -->
-			</one-of>
-		</item>
-    </one-of>
+		<item>synchronise la musique<tag>out.action.actionSonos="synchronise"</tag></item>	
 		
-	<!-- Choix de la pièce -->
+	</one-of>
+	
 	<item repeat="0-1">
 		<one-of>
-			<item>au</item>
-			<item>à la</item>
-			<item>dans le</item>
-			<item>dans la</item>
-		</one-of>
-		<one-of>
-			<!-- ##DEBUT_CHOIX_DE_LA_PIECE## -->
-			<item>Cuisine<tag>out.action.idPiece='SARAH1';out.action.idSonos='49cf955f-0693-6c59-be8e-b4033f4406f5'</tag></item>
-			<item>Salon<tag>out.action.idPiece='SARAH1';out.action.idSonos='a77905c9-1edb-6f98-7932-e90f9979f6d4'</tag></item>
+			<!-- Génération automatique lors de la sauvegarde de configuration. Ne pas éditer manuellement.-->
+			<!-- ##DEBUT CHOIX_DE_LA_PIECE## -->
+			<item>dans le SARAH1<tag>out.action.idPiece='SARAH1'</tag></item>
+			<item>dans le Cuisine<tag>out.action.idPiece='Cuisine'</tag></item>
 			<!-- ##FIN_CHOIX_DE_LA_PIECE## -->
 		</one-of>
 	</item>
-	
-	<!--<one-of repeat="0-1">
-		<item>sur play5<tag>out.action.idSonos='4b8a26fc-be8c-11ea-e4cb-02e9f914ed63'</tag></item>
-    </one-of>-->
+
     
     <tag>out.action._attributes.uri="http://127.0.0.1:8080/sarah/sonos";</tag>
   </rule>
